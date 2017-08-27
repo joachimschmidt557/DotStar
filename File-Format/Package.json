@@ -1,0 +1,18 @@
+{
+    "DotStar Information": 
+    {
+        "Version": "<DotStar version used to compile this file>"
+    },
+    "Application Information": 
+    {
+        "Name": "Insert App name here",
+        "Version": "1.0.0",
+        "Resources": 
+        {
+            "executables-win32": "",
+            "executables-win64": "",
+            "executables-snap": "",
+            "executables-dmg": ""
+        }
+    }
+}

@@ -1,2 +1,2 @@
 # DotStar
-Open file container format for universal, cross-platform applications and other files
+Imagine you could distribute apps for multiple platforms in just one package

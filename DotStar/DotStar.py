@@ -36,7 +36,7 @@ def print_help():
     print("-n\t--no-gui\tStart without a GUI")
 
 
-def open_file(file_path):
+def open_file(file_path, run=False):
     """
     Opens a .star file
     """
@@ -92,6 +92,13 @@ def open_file(file_path):
         logging.critical("File doesn't exist!")
 
 
+def compile_file(file_path):
+    """
+    Compile the specified .star file with all it's resources into a new .star file
+    """
+    raise NotImplementedError
+
+
 def decompress_file(file_path, extract_path):
     """
     Decompresses a .star file to the path specified
@@ -124,8 +131,16 @@ if __name__ == "__main__":
     # Iterate through arguments
     for argument in args:
         if argument == "-h" or argument == "--help":
+            # Print help page
             print_help()
-        if argument == "-n" or argument == "--no-gui":
+        elif argument == "-n" or argument == "--no-gui":
+            # Don't use GUI
             pass
+        elif argument.endswith("Compile.star"):
+            # The following file is a set of compilation instructions
+            compile_file(argument)
+        elif argument.endswith("Run.star"):
+            # The following file is a program which starts directly
+            open_file(argument, True)
         else:
             open_file(argument)

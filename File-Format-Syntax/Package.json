@@ -1,0 +1,53 @@
+{
+    "DotStar Information": 
+    {
+        "Version": "<DotStar version used to compile this file>"
+    },
+    "User Interface Information":
+    {
+        "Actions":
+        {
+            "Action 1":
+            {
+                "Title": "Install this application",
+                "Command": "install",
+                "Icon": "path/to/icon.png"
+            },
+            "Action 2":
+            {
+                "Title": "Run this application without installing it",
+                "Command": "run",
+                "Icon": "path/to/icon.png"
+            },
+            "Other Actions":
+            [
+                {
+                    "Title": "View source code",
+                    "Command": "viewsource"
+                },
+                {
+                    "Title": "Visit website",
+                    "Command": "website"
+                }
+            ]
+        }
+    },
+    "Application Information": 
+    {
+        "Name": "Name of the output file (without '.star')",
+        "Friendly Name": "Insert friendly app name here",
+        "Description": "Insert App description here",
+        "Version": "Insert App version here",
+        "Version System": "Insert versioning system here, e.g. MajorMinor",
+        "Resources": 
+        {
+            "executables-win32": "",
+            "executables-win64": "",
+            "executables-snap": "",
+            "executables-dmg": "", 
+
+            "source": "",
+            "source-python": ""
+        }
+    }
+}

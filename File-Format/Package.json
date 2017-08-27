@@ -5,14 +5,20 @@
     },
     "Application Information": 
     {
-        "Name": "Insert App name here",
-        "Version": "1.0.0",
+        "Name": "Name of the output file (without '.star')",
+        "Friendly Name": "Insert friendly app name here",
+        "Description": "Insert App description here",
+        "Version": "Insert App version here",
+        "Version System": "Insert versioning system here, e.g. MajorMinor",
         "Resources": 
         {
             "executables-win32": "",
             "executables-win64": "",
             "executables-snap": "",
-            "executables-dmg": ""
+            "executables-dmg": "", 
+
+            "source": "",
+            "source-python": ""
         }
     }
 }

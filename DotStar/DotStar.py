@@ -8,6 +8,7 @@ import os
 import random
 import tempfile
 import zipfile
+import zlib
 import logging
 import json
 import shutil
@@ -96,8 +97,35 @@ def compile_file(file_path):
     """
     Compile the specified .star file with all it's resources into a new .star file
     """
+    try:
+        # Create temporary folder to store the files into
+        temp_dir = get_temporary_directory()
+        output_file = ""
+
+        # Read the file into JSON
+        with open(file_path) as compilation_info_json:
+            data = json.load(compilation_info_json)
+
+        # Create Package.json
+
+        # Copy the files into the folder
+
+        # Zip the folder
+        compress_folder(temp_dir, output_file)
+
+        # Finish
+        shutil.rmtree(temp_dir)
+    except FileNotFoundError:
+        logging.critical("File doesn't exist")
+    except json.JSONDecodeError:
+        logging.critical("Bad JSON")
     raise NotImplementedError
 
+def install_file():
+    """
+    Install a .star file according to the instrucions given
+    """
+    raise NotImplementedError
 
 def decompress_file(file_path, extract_path):
     """
@@ -105,6 +133,16 @@ def decompress_file(file_path, extract_path):
     """
     with zipfile.ZipFile(file_path, "r") as z:
         z.extractall(extract_path)
+
+def compress_folder(folder_path, zipfile_path):
+    """
+    Compress a folder into a .star file
+    """
+    raise NotImplementedError
+    with zipfile.ZipFile(zipfile_path, "w", compression=zipfile.ZIP_DEFLATED) as z:
+        for (dirpath, dirnames, filenames) in os.walk(folder_path, topdown=True):
+            for filename in filenames:
+                print(dirpath + filename)
 
 def get_temporary_directory():
     """

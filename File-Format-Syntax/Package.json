@@ -39,15 +39,27 @@
         "Description": "Insert App description here",
         "Version": "Insert App version here",
         "Version System": "Insert versioning system here, e.g. MajorMinor",
+        "Default Command": "run",
         "Resources": 
         {
-            "executables-win32": "",
-            "executables-win64": "",
-            "executables-snap": "",
-            "executables-dmg": "", 
+            "executable-win32": "",
+            "executable-win64": "",
+
+            "package-snap": "",
+            "package-dmg": "",
+            "package-deb": "",
+
+            "compressed-zip": "",
 
             "source": "",
             "source-python": ""
+        },
+        "Commands":
+        {
+            "run": "open executable-win32",
+            "install": "",
+            "viewsource": "",
+            "website": "openweb http://example.com"
         }
     }
 }

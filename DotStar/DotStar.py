@@ -23,6 +23,13 @@ __version__ = "0.1"
 PACKAGE_INFO_FILE = "Package.json"
 CURRENT_PLATFORM = sys.platform
 CURRENT_VERSION = StrictVersion(__version__)
+DEFAULT_SETTINGS = {
+    "Security":
+    {
+        "Allow unsigned files": True,
+        "Allow downloading non-.star files": True
+    }
+}
 
 # VARIABLES
 
@@ -55,12 +62,15 @@ def open_file(file_path, run=False):
                 # Check the "DotStar Information area"
                 version_used_to_compile = StrictVersion(data["DotStar Information"]["Version"])
                 if CURRENT_VERSION < version_used_to_compile:
+                    # This file was created with a newer version of DotStar
+                    # So, this version may be out-of-date
                     pass
 
                 # Check the type
                 if "Application Information" in data:
                     info = data["Application Information"]
                     resources = info["Resources"]
+                    commands = info["Commands"]
                     for resource in resources:
                         if resource == "html":
                             print("hey")
@@ -72,11 +82,15 @@ def open_file(file_path, run=False):
                             pass
                         if resource == "executable":
                             pass
+                    for command in commands:
+                        pass
                 elif "Document Information" in data:
                     info = data["Document Information"]
                     resources = info["Resources"]
                     for resource in resources:
                         pass
+                elif "Folder Information" in data:
+                    pass
                 else:
                     # Empty file
                     pass
@@ -106,9 +120,9 @@ def compile_file(file_path):
         with open(file_path) as compilation_info_json:
             data = json.load(compilation_info_json)
 
-        # Create Package.json
+            # Create Package.json
 
-        # Copy the files into the folder
+            # Copy the files into the folder
 
         # Zip the folder
         compress_folder(temp_dir, output_file)

@@ -15,6 +15,7 @@ import shutil
 import platform
 import subprocess
 from distutils.version import StrictVersion
+import argparse
 
 # INFO
 __version__ = "0.1"
@@ -28,8 +29,13 @@ CURRENT_VERSION = StrictVersion(__version__)
 DEFAULT_SETTINGS = {
     "Security":
     {
+        "Allow non-local sources": True,
         "Allow unsigned files": True,
         "Allow downloading non-.star files": True
+    },
+    "Logging":
+    {
+        "Level": "info"
     }
 }
 
@@ -180,11 +186,14 @@ def compress_folder(folder_path, zipfile_path):
     """
     Compress a folder into a .star file
     """
-    raise NotImplementedError
+    dir_to_zip_len = len(folder_path.rstrip(os.sep)) + 1
     with zipfile.ZipFile(zipfile_path, "w", compression=zipfile.ZIP_DEFLATED) as z:
-        for (dirpath, dirnames, filenames) in os.walk(folder_path, topdown=True):
+        # Iterate over all files
+        for (dirpath, dirnames, filenames) in os.walk(folder_path):
             for filename in filenames:
-                print(dirpath + filename)
+                path = os.path.join(dirpath, filename)
+                entry = path[dir_to_zip_len:]
+                z.write(path, entry)
 
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
                                                         "DotStar")):
@@ -201,39 +210,53 @@ def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
 
 if __name__ == "__main__":
     # Main code goes here
-    # Get command-line arguments
-    args = sys.argv
+    # Load settings
+    load_settings()
 
-    # Remove first argument as this is just the path to this file
-    del args[0]
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(prog="DotStar",
+                                     description="DotStar application version "+__version__)
 
-    # Iterate through arguments
-    for argument in args:
-        # Global flags
-        if argument == "-h" or argument == "--help":
-            # Print help page
-            print_help()
-            exit()
-        elif argument == "-n" or argument == "--no-gui":
-            # Don't use GUI
-            pass
-        elif argument == "-l" or argument == "--log-level":
-            # Change the logging level
-            pass
+    parser.add_argument("-l", "--log-level", choices=["debug", "info", "warning", "error"],
+                        default="warning", help="Change the logging level")
+    #parser.add_argument("-n", "--no-gui", action="store_true", help="Don't show a GUI")
+    parser.add_argument("-v", "--verify", action="store_true", help="Verify the file")
+    parser.add_argument("-i", "--install", action="store_true", help="Install the file")
+    parser.add_argument("-r", "--run", action="store_true", help="Run the file")
+    parser.add_argument("files", nargs='+', help="Input files")
 
-        #Individual file flags
-        elif argument == "-v" or argument == "--verify":
-            # Verify the file, don't do anything else
+    result = parser.parse_args()
+
+    # Set up logging
+    logging_level = settings["Logging"]["Level"]
+    logging_level = result.log_level
+
+    if logging_level == "debug":
+        logging.basicConfig(level=logging.DEBUG)
+    elif logging_level == "info":
+        logging.basicConfig(level=logging.INFO)
+    elif logging_level == "warning":
+        logging.basicConfig(level=logging.WARNING)
+    else:
+        logging.basicConfig(level=logging.CRITICAL)
+
+    for input_file in result.files:
+        # Special file names
+        if input_file.endswith("Compile.star"):
             pass
-        elif argument == "-r" or argument == "--run":
+        elif input_file.endswith("Run.star"):
             pass
-        elif argument == "-i" or argument == "--install":
-            pass
-        elif argument.endswith("Compile.star"):
-            # The following file is a set of compilation instructions
-            compile_file(argument)
-        elif argument.endswith("Run.star"):
-            # The following file is a program which starts directly
-            open_file(argument, True)
         else:
-            open_file(argument)
+            if result.verify:
+                #Verify the file
+                pass
+            elif result.run:
+                #Run the file
+                open_file(input_file, run=True)
+            elif result.install:
+                #Install the file
+                pass
+            else:
+                #Open the file
+                open_file(input_file)
+    

@@ -82,5 +82,12 @@
             "viewsource": "",
             "website": "openweb http://example.com"
         }
+    },
+    "Installation Information":
+    {
+        "install-win32":
+        [
+            "cp executable-win32 %ProgramFiles32%"
+        ]
     }
 }

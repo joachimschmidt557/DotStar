@@ -21,6 +21,8 @@ __version__ = "0.1"
 
 # CONSTANTS
 PACKAGE_INFO_FILE = "Package.json"
+SETTINGS_FILE = "DotStarSettings.json"
+
 CURRENT_PLATFORM = sys.platform
 CURRENT_VERSION = StrictVersion(__version__)
 DEFAULT_SETTINGS = {
@@ -32,6 +34,21 @@ DEFAULT_SETTINGS = {
 }
 
 # VARIABLES
+settings = None
+
+def load_settings():
+    """
+    Loads the user-defined settings. If these don't
+    exist, loads the default settings.
+    """
+    global settings
+    try:
+        settings_file = SETTINGS_FILE
+        with open(settings_file) as settings_json:
+            settings = json.load(settings_json)
+    except:
+        logging.info("Using default settings")
+        settings = DEFAULT_SETTINGS
 
 
 def print_help():
@@ -66,11 +83,16 @@ def open_file(file_path, run=False):
                     # So, this version may be out-of-date
                     pass
 
+                # Check the integrity area
+                if "Integrity Information" in data:
+                    pass
+
                 # Check the type
                 if "Application Information" in data:
                     info = data["Application Information"]
                     resources = info["Resources"]
                     commands = info["Commands"]
+                    """
                     for resource in resources:
                         if resource == "html":
                             print("hey")
@@ -82,6 +104,7 @@ def open_file(file_path, run=False):
                             pass
                         if resource == "executable":
                             pass
+                    """
                     for command in commands:
                         pass
                 elif "Document Information" in data:
@@ -121,6 +144,11 @@ def compile_file(file_path):
             data = json.load(compilation_info_json)
 
             # Create Package.json
+            # Create DotStar information area
+            dotstar_information = {
+                "Version": str(__version__)
+            }
+
 
             # Copy the files into the folder
 
@@ -182,11 +210,25 @@ if __name__ == "__main__":
 
     # Iterate through arguments
     for argument in args:
+        # Global flags
         if argument == "-h" or argument == "--help":
             # Print help page
             print_help()
+            exit()
         elif argument == "-n" or argument == "--no-gui":
             # Don't use GUI
+            pass
+        elif argument == "-l" or argument == "--log-level":
+            # Change the logging level
+            pass
+
+        #Individual file flags
+        elif argument == "-v" or argument == "--verify":
+            # Verify the file, don't do anything else
+            pass
+        elif argument == "-r" or argument == "--run":
+            pass
+        elif argument == "-i" or argument == "--install":
             pass
         elif argument.endswith("Compile.star"):
             # The following file is a set of compilation instructions

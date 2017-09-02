@@ -186,17 +186,16 @@ def compress_folder(folder_path, zipfile_path):
             for filename in filenames:
                 print(dirpath + filename)
 
-def get_temporary_directory():
+def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
+                                                        "DotStar")):
     """
     Returns a temporary directory path that is guaranteed to not
     yet exist
     """
-    directory = os.path.join(tempfile.gettempdir(),
-                             "DotStar",
+    directory = os.path.join(in_folder_path,
                              str(random.randint(0, 10000)))
     while os.path.exists(directory):
-        directory = os.path.join(tempfile.gettempdir(),
-                                 "DotStar",
+        directory = os.path.join(in_folder_path,
                                  str(random.randint(0, 10000)))
     return directory
 

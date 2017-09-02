@@ -167,7 +167,6 @@ def compile_file(file_path):
         logging.critical("File doesn't exist")
     except json.JSONDecodeError:
         logging.critical("Bad JSON")
-    raise NotImplementedError
 
 def install_file():
     """
@@ -243,9 +242,9 @@ if __name__ == "__main__":
     for input_file in result.files:
         # Special file names
         if input_file.endswith("Compile.star"):
-            pass
+            compile_file(input_file)
         elif input_file.endswith("Run.star"):
-            pass
+            open_file(input_file, run=True)
         else:
             if result.verify:
                 #Verify the file
@@ -259,4 +258,3 @@ if __name__ == "__main__":
             else:
                 #Open the file
                 open_file(input_file)
-    

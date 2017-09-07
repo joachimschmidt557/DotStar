@@ -98,19 +98,6 @@ def open_file(file_path, run=False):
                     info = data["Application Information"]
                     resources = info["Resources"]
                     commands = info["Commands"]
-                    """
-                    for resource in resources:
-                        if resource == "html":
-                            print("hey")
-                        if resource == "executable-win32":
-                            if CURRENT_PLATFORM == "win32":
-                                path_to_exe = os.path.join(temp_dir, resources[resource])
-                                subprocess.run(path_to_exe)
-                        if resource == "executable-win64":
-                            pass
-                        if resource == "executable":
-                            pass
-                    """
                     for command in commands:
                         pass
                 elif "Document Information" in data:

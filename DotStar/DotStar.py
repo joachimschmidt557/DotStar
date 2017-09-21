@@ -33,7 +33,7 @@ CURRENT_VERSION = StrictVersion(__version__)
 DEFAULT_SETTINGS = {
     "Repositories":
     {
-        
+
     },
     "Security":
     {
@@ -152,11 +152,15 @@ def compile_file(file_path):
             data = json.load(compilation_info_json)
 
             # Create Package.json
+            package_json_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
             # Create DotStar information area
             dotstar_information = {
                 "Version": str(__version__)
             }
 
+            # Write to Package.json
+            with open(package_json_file) as package_file:
+                json.dump(data, package_file)
 
             # Copy the files into the folder
 
@@ -244,6 +248,7 @@ if __name__ == "__main__":
     parser.add_argument("-v", "--verify", action="store_true", help="Verify the file")
     parser.add_argument("-i", "--install", action="store_true", help="Install the file")
     parser.add_argument("-r", "--run", action="store_true", help="Run the file")
+    parser.add_argument("-y", "--yestoall", action="store_true", help="Automattically allow all actions")
     parser.add_argument("files", nargs='+', help="Input files")
 
     result = parser.parse_args()

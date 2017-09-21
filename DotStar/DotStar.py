@@ -24,6 +24,7 @@ __version__ = "0.1"
 
 # CONSTANTS
 PACKAGE_INFO_FILE = "Package.json"
+PACKAGE_FILE = "Package.py"
 SETTINGS_FILE = "DotStarSettings.json"
 
 CURRENT_PLATFORM = sys.platform
@@ -81,6 +82,7 @@ def open_file(file_path, run=False, install=False):
 
         # Process file
         package_info_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
+        package_file = os.path.join(temp_dir, PACKAGE_FILE)
         try:
             with open(package_info_file) as package_info_json:
                 data = json.load(package_info_json)
@@ -105,10 +107,10 @@ def open_file(file_path, run=False, install=False):
                     # Check our specified action
                     if run:
                         # Run the app
-                        os.system('python Package.py run')
+                        os.system("python " + package_file + " run")
                     elif install:
                         # Install the app
-                        os.system('python Package.py install')
+                        os.system("python " + package_file + " run")
                 elif "Document Information" in data:
                     info = data["Document Information"]
                     resources = info["Resources"]
@@ -196,13 +198,16 @@ def is_url(path):
                        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
     return regex.match(path)
 
-def download_file(url, path):
+def download_file(url, folder_path):
     """
-    Downloads a .star file
+    Downloads a .star file and returns the file path
+    of the downloaded file
     """
+    file_path = os.path.join(folder_path, "Temp.star")
     r = requests.get(url)
-    with open(path, "wb") as dotstarfile:
+    with open(file_path, "wb") as dotstarfile:
         dotstarfile.write(r.content)
+    return file_path
 
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
                                                         "DotStar")):
@@ -255,7 +260,7 @@ if __name__ == "__main__":
             compile_file(input_file)
         elif input_file.endswith("Run.star"):
             if is_url(input_file):
-                download_file(input_file, get_temporary_directory)
+                open_file(download_file(input_file, get_temporary_directory), run=True)
             else:
                 open_file(input_file, run=True)
         else:
@@ -264,10 +269,19 @@ if __name__ == "__main__":
                 pass
             elif result.run:
                 #Run the file
-                open_file(input_file, run=True)
+                if is_url(input_file):
+                    open_file(download_file(input_file, get_temporary_directory), run=True)
+                else:
+                    open_file(input_file, run=True)
             elif result.install:
                 #Install the file
-                open_file(input_file, install=True)
+                if is_url(input_file):
+                    open_file(download_file(input_file, get_temporary_directory), run=True)
+                else:
+                    open_file(input_file, run=True)
             else:
                 #Open the file
-                open_file(input_file)
+                if is_url(input_file):
+                    open_file(download_file(input_file, get_temporary_directory), run=True)
+                else:
+                    open_file(input_file, run=True)

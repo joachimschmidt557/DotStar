@@ -56,6 +56,17 @@ def load_settings():
         logging.info("Using default settings")
         settings = DEFAULT_SETTINGS
 
+def save_settings():
+    """
+    Save the settings into the Settings JSON file.
+    """
+    global settings
+    try:
+        settings_file = SETTINGS_FILE
+        with open(settings_file, 'w') as settings_json:
+            json.dump(settings, settings_json)
+    except:
+        logging.error("Couldn't update settings")
 
 def print_help():
     """
@@ -67,7 +78,7 @@ def print_help():
     print("-n\t--no-gui\tStart without a GUI")
 
 
-def open_file(file_path, run=False):
+def open_file(file_path, run=False, install=False):
     """
     Opens a .star file
     """
@@ -98,8 +109,14 @@ def open_file(file_path, run=False):
                     info = data["Application Information"]
                     resources = info["Resources"]
                     commands = info["Commands"]
-                    for command in commands:
-                        pass
+
+                    # Check our specified action
+                    if run:
+                        # Run the app
+                        os.system('python Package.py run')
+                    elif install:
+                        # Install the app
+                        os.system('python Package.py install')
                 elif "Document Information" in data:
                     info = data["Document Information"]
                     resources = info["Resources"]
@@ -154,12 +171,6 @@ def compile_file(file_path):
         logging.critical("File doesn't exist")
     except json.JSONDecodeError:
         logging.critical("Bad JSON")
-
-def install_file():
-    """
-    Install a .star file according to the instrucions given
-    """
-    raise NotImplementedError
 
 def decompress_file(file_path, extract_path):
     """

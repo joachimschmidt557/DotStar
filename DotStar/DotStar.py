@@ -190,19 +190,21 @@ def is_url(path):
     """
     Returns whether path is a URL
     """
-    regex = re.compile(r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
-                       r'^(?:http|ftp)s?://' # http:// or https://
-                       r'localhost|' #localhost...
-                       r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
-                       r'(?::\d+)?' # optional port
-                       r'(?:/?|[/?]\S+)$', re.IGNORECASE)
-    return regex.match(path)
+    regex = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+        r'localhost|' #localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    return bool(regex.match(path))
 
 def download_file(url, folder_path):
     """
     Downloads a .star file and returns the file path
     of the downloaded file
     """
+    logging.info("Downloading " + url)
     file_path = os.path.join(folder_path, "Temp.star")
     r = requests.get(url)
     with open(file_path, "wb") as dotstarfile:
@@ -278,7 +280,7 @@ if __name__ == "__main__":
                 if is_url(input_file):
                     open_file(download_file(input_file, get_temporary_directory), run=True)
                 else:
-                    open_file(input_file, run=True)
+                    open_file(input_file, install=True)
             else:
                 #Open the file
                 if is_url(input_file):

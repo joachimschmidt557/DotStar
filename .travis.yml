@@ -3,4 +3,4 @@
     - 3.6
     - nightly
   script:
-    - pytest
+    - python $pwd/DotStar/DotStar.py https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star

@@ -107,11 +107,9 @@ def open_file(file_path, run=False, install=False):
                     # Check our specified action
                     if run:
                         # Run the app
-                        print("test")
                         os.system("python " + package_file + " run")
                     elif install:
                         # Install the app
-                        print("test")
                         os.system("python " + package_file + " install")
                 elif "Document Information" in data:
                     info = data["Document Information"]
@@ -283,15 +281,15 @@ if __name__ == "__main__":
             elif result.install:
                 #Install the file
                 if is_url(input_file):
-                    open_file(download_file(input_file, get_temporary_directory()), run=True)
+                    open_file(download_file(input_file, get_temporary_directory()), install=True)
                 else:
                     open_file(input_file, install=True)
             else:
                 #Open the file
                 if is_url(input_file):
-                    open_file(download_file(input_file, get_temporary_directory()), run=True)
+                    open_file(download_file(input_file, get_temporary_directory()))
                 else:
-                    open_file(input_file, run=True)
+                    open_file(input_file)
 
     # Finished, now clean up
     logging.shutdown()

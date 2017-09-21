@@ -222,6 +222,7 @@ def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
     while os.path.exists(directory):
         directory = os.path.join(in_folder_path,
                                  str(random.randint(0, 10000)))
+    os.makedirs(directory)
     return directory
 
 if __name__ == "__main__":

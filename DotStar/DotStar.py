@@ -262,7 +262,7 @@ if __name__ == "__main__":
             compile_file(input_file)
         elif input_file.endswith("Run.star"):
             if is_url(input_file):
-                open_file(download_file(input_file, get_temporary_directory), run=True)
+                open_file(download_file(input_file, get_temporary_directory()), run=True)
             else:
                 open_file(input_file, run=True)
         else:
@@ -272,18 +272,18 @@ if __name__ == "__main__":
             elif result.run:
                 #Run the file
                 if is_url(input_file):
-                    open_file(download_file(input_file, get_temporary_directory), run=True)
+                    open_file(download_file(input_file, get_temporary_directory()), run=True)
                 else:
                     open_file(input_file, run=True)
             elif result.install:
                 #Install the file
                 if is_url(input_file):
-                    open_file(download_file(input_file, get_temporary_directory), run=True)
+                    open_file(download_file(input_file, get_temporary_directory()), run=True)
                 else:
                     open_file(input_file, install=True)
             else:
                 #Open the file
                 if is_url(input_file):
-                    open_file(download_file(input_file, get_temporary_directory), run=True)
+                    open_file(download_file(input_file, get_temporary_directory()), run=True)
                 else:
                     open_file(input_file, run=True)

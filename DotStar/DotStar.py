@@ -31,6 +31,10 @@ SETTINGS_FILE = "DotStarSettings.json"
 CURRENT_PLATFORM = sys.platform
 CURRENT_VERSION = StrictVersion(__version__)
 DEFAULT_SETTINGS = {
+    "Repositories":
+    {
+        
+    },
     "Security":
     {
         "Allow non-local sources": True,

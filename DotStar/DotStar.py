@@ -16,6 +16,8 @@ import platform
 import subprocess
 from distutils.version import StrictVersion
 import argparse
+import re
+import requests
 
 # INFO
 __version__ = "0.1"
@@ -67,16 +69,6 @@ def save_settings():
             json.dump(settings, settings_json)
     except:
         logging.error("Couldn't update settings")
-
-def print_help():
-    """
-    Prints some help information to the console screen
-    """
-    print("DotStar version " + __version__)
-    print("Command-line arguments: ")
-    print("-h\t--help\tShow this help page")
-    print("-n\t--no-gui\tStart without a GUI")
-
 
 def open_file(file_path, run=False, install=False):
     """
@@ -192,6 +184,26 @@ def compress_folder(folder_path, zipfile_path):
                 entry = path[dir_to_zip_len:]
                 z.write(path, entry)
 
+def is_url(path):
+    """
+    Returns whether path is a URL
+    """
+    regex = re.compile(r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+                       r'^(?:http|ftp)s?://' # http:// or https://
+                       r'localhost|' #localhost...
+                       r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+                       r'(?::\d+)?' # optional port
+                       r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+    return regex.match(path)
+
+def download_file(url, path):
+    """
+    Downloads a .star file
+    """
+    r = requests.get(url)
+    with open(path, "wb") as dotstarfile:
+        dotstarfile.write(r.content)
+
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
                                                         "DotStar")):
     """
@@ -242,7 +254,10 @@ if __name__ == "__main__":
         if input_file.endswith("Compile.star"):
             compile_file(input_file)
         elif input_file.endswith("Run.star"):
-            open_file(input_file, run=True)
+            if is_url(input_file):
+                download_file(input_file, get_temporary_directory)
+            else:
+                open_file(input_file, run=True)
         else:
             if result.verify:
                 #Verify the file
@@ -252,7 +267,7 @@ if __name__ == "__main__":
                 open_file(input_file, run=True)
             elif result.install:
                 #Install the file
-                pass
+                open_file(input_file, install=True)
             else:
                 #Open the file
                 open_file(input_file)

@@ -18,6 +18,7 @@ from distutils.version import StrictVersion
 import argparse
 import re
 import requests
+import hashlib
 
 # INFO
 __version__ = "0.1"
@@ -38,7 +39,7 @@ DEFAULT_SETTINGS = {
     },
     "Logging":
     {
-        "Level": "info"
+        "Level": "debug"
     }
 }
 
@@ -56,7 +57,6 @@ def load_settings():
         with open(settings_file) as settings_json:
             settings = json.load(settings_json)
     except:
-        logging.info("Using default settings")
         settings = DEFAULT_SETTINGS
 
 def save_settings():
@@ -92,7 +92,7 @@ def open_file(file_path, run=False, install=False):
                 if CURRENT_VERSION < version_used_to_compile:
                     # This file was created with a newer version of DotStar
                     # So, this version may be out-of-date
-                    pass
+                    logging.warning("Your DotStar version may be out-of-date.")
 
                 # Check the integrity area
                 if "Integrity Information" in data:
@@ -107,10 +107,12 @@ def open_file(file_path, run=False, install=False):
                     # Check our specified action
                     if run:
                         # Run the app
+                        print("test")
                         os.system("python " + package_file + " run")
                     elif install:
                         # Install the app
-                        os.system("python " + package_file + " run")
+                        print("test")
+                        os.system("python " + package_file + " install")
                 elif "Document Information" in data:
                     info = data["Document Information"]
                     resources = info["Resources"]
@@ -235,7 +237,7 @@ if __name__ == "__main__":
                                      description="DotStar application version "+__version__)
 
     parser.add_argument("-l", "--log-level", choices=["debug", "info", "warning", "error"],
-                        default="warning", help="Change the logging level")
+                        default="debug", help="Change the logging level")
     #parser.add_argument("-n", "--no-gui", action="store_true", help="Don't show a GUI")
     parser.add_argument("-v", "--verify", action="store_true", help="Verify the file")
     parser.add_argument("-i", "--install", action="store_true", help="Install the file")
@@ -257,8 +259,10 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.CRITICAL)
 
+    # Go though input files
     for input_file in result.files:
         # Special file names
+        logging.info("Processing file " + input_file)
         if input_file.endswith("Compile.star"):
             compile_file(input_file)
         elif input_file.endswith("Run.star"):
@@ -288,3 +292,6 @@ if __name__ == "__main__":
                     open_file(download_file(input_file, get_temporary_directory()), run=True)
                 else:
                     open_file(input_file, run=True)
+
+    # Finished, now clean up
+    logging.shutdown()

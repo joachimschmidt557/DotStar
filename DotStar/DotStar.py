@@ -34,9 +34,9 @@ CURRENT_PLATFORM = sys.platform
 CURRENT_VERSION = StrictVersion(__version__)
 DEFAULT_SETTINGS = {
     "Repositories":
-    {
-
-    },
+    [
+        "https://raw.githubusercontent.com/joachimschmidt557/DotStarRepo/master/Master.json"
+    ],
     "Security":
     {
         "Allow non-local sources": True,

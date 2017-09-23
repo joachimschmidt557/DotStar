@@ -1,7 +1,7 @@
 {
     "Basic Package Information":
     {
-        "Name": "dotstartemplate"
+        "Name": "dotstar"
     },
     "Author information":
     {

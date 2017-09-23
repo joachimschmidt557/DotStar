@@ -239,8 +239,8 @@ def compile_file(file_path):
 
         # Finish and clean up
         shutil.rmtree(temp_dir)
-    except FileNotFoundError:
-        logging.critical("File doesn't exist")
+    except FileNotFoundError as err:
+        logging.critical("File doesn't exist " + str(err))
     except json.JSONDecodeError:
         logging.critical("Bad JSON")
 

@@ -24,9 +24,15 @@ def install_package():
     print("Installing DotStar...")
 
 def run_package():
+    """
+    Run DotStar
+    """
     print("Running DotStar...")
 
 def compile_package():
+    """
+    Compile DotStar
+    """
     print("Compiling DotStar...")
     print("Creating Windows binaries")
     print("Creating Linux binaries")

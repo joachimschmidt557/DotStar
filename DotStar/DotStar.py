@@ -130,7 +130,12 @@ def open_file(file_path, run=False, install=False):
 
                 # Check the dependencies area
                 if "Dependency Information" in data:
-                    pass
+                    for dependency in data["Dependencies"]:
+                        logging.debug("This file depends on " + dependency["Name"])
+                        # Check if the dependecy is installed
+
+                        # Install dependency
+                        open_file(dependency["File"], install=True)
 
                 # Check the type
                 if "Application Information" in data:
@@ -152,11 +157,14 @@ def open_file(file_path, run=False, install=False):
                         shutil.copy(file_path, installation_dir)
 
                         # Additional installation steps
-                        if user_consent("Install the File? (y/n): "):
+                        if user_consent("Run the python script for additional installation steps? (y/n): "):
                             os.system("python " + package_file + " install")
                     else:
                         # If no action is specified, let the user decide
-                        pass
+                        print(info["Friendly Name"])
+                        print("Version " + info["Version"])
+                        print("Possible actions: ")
+
                 elif "Document Information" in data:
                     # Type: Document package
                     info = data["Document Information"]
@@ -288,6 +296,12 @@ def search_repos_for_files(file_name):
     """
     output = []
     raise NotImplementedError
+
+def list_installed_files():
+    """
+    Lists all installed files
+    """
+    installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
 
 def search_installed_files(file_name):
     """

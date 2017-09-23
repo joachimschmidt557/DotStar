@@ -17,5 +17,12 @@
         "Description": "Open file container format for universal, cross-platform applications and other files",
         "Version": "0.1.0",
         "Version System": "MajorMinor"
-    }
+    },
+    "Dependencies":
+    [
+        {
+            "Name": "Python3",
+            "File": "Python3.star"
+        }
+    ]
 }

@@ -276,6 +276,7 @@ def search_repos_for_files(file_name):
     Searches the repos in the given settings for
     the specified file
     """
+    output = []
     raise NotImplementedError
 
 def search_installed_files(file_name):
@@ -283,6 +284,7 @@ def search_installed_files(file_name):
     Searches the installed .star files for matching
     files
     """
+    output = []
     raise NotImplementedError
 
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),

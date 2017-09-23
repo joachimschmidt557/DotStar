@@ -100,10 +100,15 @@ def open_file(file_path, run=False, install=False):
 
                 # Check the integrity area
                 if "Integrity Information" in data:
-                    pass
+                    if "Hashes" in data["Integrity Information"]:
+                        # Calculate hashes
+
+                        # Compare and abort if necessary
+                        pass
 
                 # Check the type
                 if "Application Information" in data:
+                    # Type: Application package
                     info = data["Application Information"]
                     resources = info["Resources"]
                     commands = info["Commands"]
@@ -115,12 +120,17 @@ def open_file(file_path, run=False, install=False):
                     elif install:
                         # Install the app
                         os.system("python " + package_file + " install")
+                    else:
+                        # If no action is specified, let the user decide
+                        pass
                 elif "Document Information" in data:
+                    # Type: Document package
                     info = data["Document Information"]
                     resources = info["Resources"]
                     for resource in resources:
                         pass
                 elif "Folder Information" in data:
+                    # Type: Folder package
                     pass
                 else:
                     # Empty file
@@ -247,6 +257,7 @@ if __name__ == "__main__":
     #parser.add_argument("-n", "--no-gui", action="store_true", help="Don't show a GUI")
     parser.add_argument("-v", "--verify", action="store_true", help="Verify the file")
     parser.add_argument("-i", "--install", action="store_true", help="Install the file")
+    parser.add_argument("-u", "--uninstall", action="store_true", help="Uninstall the file")
     parser.add_argument("-r", "--run", action="store_true", help="Run the file")
     parser.add_argument("-y", "--yestoall", action="store_true", help="Automattically allow all actions")
     parser.add_argument("files", nargs='+', help="Input files")

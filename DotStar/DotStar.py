@@ -181,20 +181,31 @@ def compile_file(file_path):
 
         # Read the file into JSON
         with open(file_path) as compilation_info_json:
-            data = json.load(compilation_info_json)
+            other_data = json.load(compilation_info_json)
 
             # Create Package.json
             package_json_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
+
             # Create DotStar information area
-            dotstar_information = {
-                "Version": str(__version__)
+            data = {
+                "DotStar Information":
+                {
+                    "Version": str(__version__)
+                }
             }
+            # Append the other data to our DotStar info area
+            data.update(other_data)
 
             # Write to Package.json
             with open(package_json_file) as package_file:
                 json.dump(data, package_file)
 
-            # Copy the files into the folder
+            # Copy the necessary files into the folder
+
+            # Run the python script for additional compilation options
+            script_file = os.path.join(temp_dir, PACKAGE_FILE)
+            if user_consent("Run compilation script? (y/n)"):
+                os.system("python " + script_file + " compile")
 
         # Zip the folder
         compress_folder(temp_dir, output_file)
@@ -250,6 +261,20 @@ def download_file(url, folder_path):
     with open(file_path, "wb") as dotstarfile:
         dotstarfile.write(r.content)
     return file_path
+
+def search_repos_for_files(file_name):
+    """
+    Searches the repos in the given settings for
+    the specified file
+    """
+    raise NotImplementedError
+
+def search_installed_files(file_name):
+    """
+    Searches the installed .star files for matching
+    files
+    """
+    raise NotImplementedError
 
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
                                                         "DotStar")):

@@ -7,4 +7,4 @@
     - nightly
   script:
     - python $PWD/DotStar/DotStar.py -h
-    - python $PWD/DotStar/DotStar.py https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star
+    - python $PWD/DotStar/DotStar.py -y -r https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star

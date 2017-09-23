@@ -27,6 +27,8 @@ __version__ = "0.1"
 PACKAGE_INFO_FILE = "Package.json"
 PACKAGE_FILE = "Package.py"
 SETTINGS_FILE = "DotStarSettings.json"
+FILE_CACHE_DIRECTORY = "Packages"
+INSTALLED_FILES_DIRECTORY = "Installed"
 
 CURRENT_PLATFORM = sys.platform
 CURRENT_VERSION = StrictVersion(__version__)
@@ -49,6 +51,7 @@ DEFAULT_SETTINGS = {
 
 # VARIABLES
 settings = None
+yes_to_all = False
 
 def load_settings():
     """
@@ -74,6 +77,23 @@ def save_settings():
             json.dump(settings, settings_json)
     except:
         logging.error("Couldn't update settings")
+
+def user_consent(message):
+    """
+    Returns whether the user agrees to the message
+    """
+    if yes_to_all:
+        return True
+    user_input = input(message)
+    while not (user_input == '' or
+               user_input == 'y' or
+               user_input == 'Y' or
+               user_input == 'n' or
+               user_input == 'N'):
+        user_input = input("Please provide a correct option")
+    if user_input == '' or user_input == 'y' or user_input == 'Y':
+        return True
+    return False
 
 def open_file(file_path, run=False, install=False):
     """
@@ -116,10 +136,12 @@ def open_file(file_path, run=False, install=False):
                     # Check our specified action
                     if run:
                         # Run the app
-                        os.system("python " + package_file + " run")
+                        if user_consent("Run the File? (y/n)"):
+                            os.system("python " + package_file + " run")
                     elif install:
                         # Install the app
-                        os.system("python " + package_file + " install")
+                        if user_consent("Install the File? (y/n)"):
+                            os.system("python " + package_file + " install")
                     else:
                         # If no action is specified, let the user decide
                         pass
@@ -277,6 +299,9 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=logging.CRITICAL)
 
+    # Yes to all ?
+    yes_to_all = result.yestoall
+    
     # Go though input files
     for input_file in result.files:
         # Special file names

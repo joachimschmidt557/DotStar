@@ -128,6 +128,10 @@ def open_file(file_path, run=False, install=False):
                         # Compare and abort if necessary
                         pass
 
+                # Check the dependencies area
+                if "Dependency Information" in data:
+                    pass
+
                 # Check the type
                 if "Application Information" in data:
                     # Type: Application package
@@ -142,6 +146,12 @@ def open_file(file_path, run=False, install=False):
                             os.system("python " + package_file + " run")
                     elif install:
                         # Install the app
+                        # Copy the package to the installation directory
+                        installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
+                        os.makedirs(installation_dir)
+                        shutil.copy(file_path, installation_dir)
+
+                        # Additional installation steps
                         if user_consent("Install the File? (y/n): "):
                             os.system("python " + package_file + " install")
                     else:

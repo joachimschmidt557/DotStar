@@ -102,6 +102,7 @@ def open_file(file_path, run=False, install=False):
     try:
         # Extract file to temporary directory
         temp_dir = get_temporary_directory()
+        logging.debug("Extracting file to temporary directory " + temp_dir)
         decompress_file(file_path, temp_dir)
 
         # Process file
@@ -116,7 +117,8 @@ def open_file(file_path, run=False, install=False):
                 if CURRENT_VERSION < version_used_to_compile:
                     # This file was created with a newer version of DotStar
                     # So, this version may be out-of-date
-                    logging.warning("Your DotStar version may be out-of-date.")
+                    logging.warning("""Your DotStar version may be out-of-date. This file
+                                    was created using a newer version of DotStar.""")
 
                 # Check the integrity area
                 if "Integrity Information" in data:
@@ -130,17 +132,17 @@ def open_file(file_path, run=False, install=False):
                 if "Application Information" in data:
                     # Type: Application package
                     info = data["Application Information"]
-                    resources = info["Resources"]
-                    commands = info["Commands"]
+                    #resources = info["Resources"]
+                    #commands = info["Commands"]
 
                     # Check our specified action
                     if run:
                         # Run the app
-                        if user_consent("Run the File? (y/n)"):
+                        if user_consent("Run the File? (y/n): "):
                             os.system("python " + package_file + " run")
                     elif install:
                         # Install the app
-                        if user_consent("Install the File? (y/n)"):
+                        if user_consent("Install the File? (y/n): "):
                             os.system("python " + package_file + " install")
                     else:
                         # If no action is specified, let the user decide
@@ -156,7 +158,7 @@ def open_file(file_path, run=False, install=False):
                     pass
                 else:
                     # Empty file
-                    pass
+                    logging.warning("This file is an empty file.")
         except FileNotFoundError:
             raise FileNotFoundError
         except json.JSONDecodeError:
@@ -164,6 +166,7 @@ def open_file(file_path, run=False, install=False):
 
         # If necessary, clean up the temporary directory
         shutil.rmtree(temp_dir)
+        logging.debug("Removed temporary directory " + temp_dir)
     except zipfile.BadZipFile:
         logging.critical("Bad zip file!")
     except FileNotFoundError:
@@ -174,14 +177,21 @@ def compile_file(file_path):
     """
     Compile the specified .star file with all it's resources into a new .star file
     """
+    logging.info("Attempting to compile " + file_path)
     try:
         # Create temporary folder to store the files into
-        temp_dir = get_temporary_directory()
+        temp_dir = get_temporary_directory(create_directory=False)
         output_file = ""
+
+        # Copy the necessary files into the folder
+        shutil.copytree(os.path.dirname(file_path), temp_dir)
 
         # Read the file into JSON
         with open(file_path) as compilation_info_json:
             other_data = json.load(compilation_info_json)
+
+            # Get the output file name
+            output_file = os.path.join(os.getcwd(), other_data["Application Information"]["Name"] + ".star")
 
             # Create Package.json
             package_json_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
@@ -197,20 +207,19 @@ def compile_file(file_path):
             data.update(other_data)
 
             # Write to Package.json
-            with open(package_json_file) as package_file:
+            with open(package_json_file, 'w') as package_file:
                 json.dump(data, package_file)
 
-            # Copy the necessary files into the folder
-
-            # Run the python script for additional compilation options
+            # Run the python script for additional compilation steps
             script_file = os.path.join(temp_dir, PACKAGE_FILE)
-            if user_consent("Run compilation script? (y/n)"):
+            if user_consent("Run compilation script? (y/n): "):
                 os.system("python " + script_file + " compile")
 
         # Zip the folder
         compress_folder(temp_dir, output_file)
+        logging.info("Compiled package: " + output_file)
 
-        # Finish
+        # Finish and clean up
         shutil.rmtree(temp_dir)
     except FileNotFoundError:
         logging.critical("File doesn't exist")
@@ -277,7 +286,8 @@ def search_installed_files(file_name):
     raise NotImplementedError
 
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
-                                                        "DotStar")):
+                                                        "DotStar"),
+                            create_directory=True):
     """
     Returns a temporary directory path that is guaranteed to not
     yet exist
@@ -287,7 +297,8 @@ def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
     while os.path.exists(directory):
         directory = os.path.join(in_folder_path,
                                  str(random.randint(0, 10000)))
-    os.makedirs(directory)
+    if create_directory:
+        os.makedirs(directory)
     return directory
 
 if __name__ == "__main__":
@@ -326,7 +337,7 @@ if __name__ == "__main__":
 
     # Yes to all ?
     yes_to_all = result.yestoall
-    
+
     # Go though input files
     for input_file in result.files:
         # Special file names

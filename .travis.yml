@@ -1,6 +1,5 @@
   language: python
   python:
-    - 2.7
     - 3.5
     - 3.6
     - 3.6-dev
@@ -8,5 +7,6 @@
   script:
     - python $PWD/DotStar/DotStar.py -h
     - python $PWD/DotStar/DotStar.py refresh
+    - python $PWD/DotStar/DotStar.py listall
     - python $PWD/DotStar/DotStar.py -y -r https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star
     - python $PWD/DotStar/DotStar.py -y $PWD/DotStar/Compile.star

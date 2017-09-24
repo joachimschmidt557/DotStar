@@ -299,6 +299,7 @@ def refresh_local_repo():
     for repository in settings["Repositories"]:
         # Download file
         download_file(repository, REPO_DIRECTORY)
+    logging.info("Repositories refreshed successfully")
 
 def search_repos_for_files(file_name):
     """
@@ -312,6 +313,18 @@ def search_repos_for_files(file_name):
             with open(filename) as repo_json:
                 global_repo_data.update(json.load(repo_json))
     return filter(lambda item: item["Name"] == file_name, global_repo_data)
+
+def list_all_repo_files():
+    """
+    Returns all files in the repos
+    """
+    global_repo_data = {}
+    # Get all files in the repository directory
+    for (dirpath, dirnames, filenames) in os.walk(REPO_DIRECTORY):
+        for filename in filenames:
+            with open(filename) as repo_json:
+                global_repo_data.update(json.load(repo_json))
+    return global_repo_data
 
 def list_installed_files():
     """
@@ -386,6 +399,11 @@ if __name__ == "__main__":
         # Special file names
         logging.info("Processing file " + input_file)
         if input_file == "refresh":
+            refresh_local_repo()
+        if input_file == "listall":
+            for item in list_all_repo_files():
+                print(item)
+        if input_file == "listinstalled":
             refresh_local_repo()
         elif input_file.endswith("Compile.star"):
             compile_file(input_file)

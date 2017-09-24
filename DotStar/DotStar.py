@@ -400,10 +400,10 @@ if __name__ == "__main__":
         logging.info("Processing file " + input_file)
         if input_file == "refresh":
             refresh_local_repo()
-        if input_file == "listall":
+        elif input_file == "listall":
             for item in list_all_repo_files():
                 print(item)
-        if input_file == "listinstalled":
+        elif input_file == "listinstalled":
             refresh_local_repo()
         elif input_file.endswith("Compile.star"):
             compile_file(input_file)

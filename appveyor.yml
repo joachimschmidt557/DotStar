@@ -34,8 +34,7 @@ test_script:
   # the interpreter you're using - Appveyor does not do anything special
   # to put the Python version you want to use on PATH.
   - "%PYTHON%\\python.exe DotStar\\Dotstar.py -h"
-  - "%PYTHON%\\python.exe DotStar\\Dotstar.py refresh"
-  - "%PYTHON%\\python.exe DotStar\\Dotstar.py listall"
+  - "%PYTHON%\\python.exe DotStar\\Dotstar.py refresh listall"
   - "%PYTHON%\\python.exe DotStar\\Dotstar.py -y -r https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star"
   - "%PYTHON%\\python.exe DotStar\\Dotstar.py -y DotStar\\Compile.star"
 

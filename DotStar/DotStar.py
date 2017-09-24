@@ -318,13 +318,13 @@ def list_all_repo_files():
     """
     Returns all files in the repos
     """
-    global_repo_data = {}
+    all_repo_files = []
     # Get all files in the repository directory
-    for (dirpath, dirnames, filenames) in os.walk(REPO_DIRECTORY):
-        for filename in filenames:
-            with open(filename) as repo_json:
-                global_repo_data.update(json.load(repo_json))
-    return global_repo_data
+    onlyfiles = [f for f in os.listdir(REPO_DIRECTORY) if os.path.isfile(os.path.join(REPO_DIRECTORY, f))]
+    for filename in onlyfiles:
+        with open(os.path.join(REPO_DIRECTORY, filename)) as repo_json:
+            all_repo_files += json.load(repo_json)["Packages"]
+    return all_repo_files
 
 def list_installed_files():
     """
@@ -402,7 +402,7 @@ if __name__ == "__main__":
             refresh_local_repo()
         elif input_file == "listall":
             for item in list_all_repo_files():
-                print(item)
+                print(item["Name"])
         elif input_file == "listinstalled":
             refresh_local_repo()
         elif input_file.endswith("Compile.star"):

@@ -295,6 +295,7 @@ def refresh_local_repo():
     Downloads all repository data, thus refreshing
     all programs
     """
+    os.makedirs(REPO_DIRECTORY)
     for repository in settings["Repositories"]:
         # Download file
         download_file(repository, REPO_DIRECTORY)
@@ -317,6 +318,7 @@ def list_installed_files():
     Lists all installed files
     """
     installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
+    os.makedirs(installation_dir)
 
 def search_installed_files(file_name):
     """

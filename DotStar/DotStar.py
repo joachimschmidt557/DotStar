@@ -29,6 +29,7 @@ PACKAGE_FILE = "Package.py"
 SETTINGS_FILE = "DotStarSettings.json"
 FILE_CACHE_DIRECTORY = "Packages"
 INSTALLED_FILES_DIRECTORY = "Installed"
+REPO_DIRECTORY = "Repositories"
 
 CURRENT_PLATFORM = sys.platform
 CURRENT_VERSION = StrictVersion(__version__)
@@ -289,13 +290,27 @@ def download_file(url, folder_path):
         dotstarfile.write(r.content)
     return file_path
 
+def refresh_local_repo():
+    """
+    Downloads all repository data, thus refreshing
+    all programs
+    """
+    for repository in settings["Repositories"]:
+        # Download file
+        download_file(repository, REPO_DIRECTORY)
+
 def search_repos_for_files(file_name):
     """
     Searches the repos in the given settings for
-    the specified file
+    the specified file (without .star)
     """
-    output = []
-    raise NotImplementedError
+    global_repo_data = {}
+    # Get all files in the repository directory
+    for (dirpath, dirnames, filenames) in os.walk(REPO_DIRECTORY):
+        for filename in filenames:
+            with open(filename) as repo_json:
+                global_repo_data.update(json.load(repo_json))
+    return filter(lambda item: item["Name"] == file_name, global_repo_data)
 
 def list_installed_files():
     """
@@ -368,13 +383,16 @@ if __name__ == "__main__":
     for input_file in result.files:
         # Special file names
         logging.info("Processing file " + input_file)
-        if input_file.endswith("Compile.star"):
+        if input_file == "refresh":
+            refresh_local_repo()
+        elif input_file.endswith("Compile.star"):
             compile_file(input_file)
         elif input_file.endswith("Run.star"):
             if is_url(input_file):
                 open_file(download_file(input_file, get_temporary_directory()), run=True)
             else:
                 open_file(input_file, run=True)
+        # Normal DotStar files
         else:
             if result.verify:
                 #Verify the file

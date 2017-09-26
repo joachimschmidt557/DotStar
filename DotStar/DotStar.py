@@ -26,7 +26,7 @@ __version__ = "0.1"
 # CONSTANTS
 PACKAGE_INFO_FILE = "Package.json"
 PACKAGE_FILE = "Package.py"
-SETTINGS_FILE = "DotStarSettings.json"
+SETTINGS_FILE = "DotStarSettings.star"
 FILE_CACHE_DIRECTORY = "Packages"
 INSTALLED_FILES_DIRECTORY = "Installed"
 REPO_DIRECTORY = "Repositories"
@@ -54,14 +54,13 @@ DEFAULT_SETTINGS = {
 settings = None
 yes_to_all = False
 
-def load_settings():
+def load_settings(settings_file=SETTINGS_FILE):
     """
     Loads the user-defined settings. If these don't
     exist, loads the default settings.
     """
     global settings
     try:
-        settings_file = SETTINGS_FILE
         with open(settings_file) as settings_json:
             settings = json.load(settings_json)
     except:
@@ -295,7 +294,8 @@ def refresh_local_repo():
     Downloads all repository data, thus refreshing
     all programs
     """
-    os.makedirs(REPO_DIRECTORY)
+    if not os.path.exists(REPO_DIRECTORY):
+        os.makedirs(REPO_DIRECTORY)
     for repository in settings["Repositories"]:
         # Download file
         download_file(repository, REPO_DIRECTORY)
@@ -338,7 +338,11 @@ def list_all_repo_files():
     """
     Returns all files in the repos
     """
+    print("Following packages are available: ")
     all_repo_files = []
+    # Check if repository directory exists
+    if not os.path.exists(REPO_DIRECTORY):
+        return []
     # Get all files in the repository directory
     onlyfiles = [f for f in os.listdir(REPO_DIRECTORY) if os.path.isfile(os.path.join(REPO_DIRECTORY, f))]
     for filename in onlyfiles:
@@ -392,7 +396,11 @@ if __name__ == "__main__":
 
     # General flags
     parser.add_argument("-s", "--search", action="store_true", help="Search all available files")
-    parser.add_argument("-l", "--lock", action="store_true", help="Prevent modifying or removing the installed file")
+    parser.add_argument("-o", "--lock", action="store_true", help="Prevent modifying or removing the installed file")
+
+    # Repository flags
+    parser.add_argument("-a", "--add-repo", action="store_true", help="Adds a repository")
+    parser.add_argument("-x", "--remove-repo", action="store_true", help="Removes a repository")
 
     # File-specific flags
     parser.add_argument("-v", "--verify", action="store_true", help="Verify the file")
@@ -430,7 +438,11 @@ if __name__ == "__main__":
             for item in list_all_repo_files():
                 print(item["Name"])
         elif input_file == "listinstalled":
-            refresh_local_repo()
+            for item in list_all_repo_files():
+                print(item["Name"])
+        elif input_file.endswith("DotStarSettings.star"):
+            load_settings(input_file)
+            save_settings()
         elif input_file.endswith("Compile.star"):
             compile_file(input_file)
         elif input_file.endswith("Run.star"):

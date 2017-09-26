@@ -97,11 +97,44 @@ def user_consent(message):
         return True
     return False
 
-def open_file():
+def open_file(path, run=False, install=False, verify=False):
     """
     Does whats necessary to process the file and
     afterwards opens it
     """
+    # Retrieve the file
+    local_file_path = ""
+    if os.path.isfile(path):
+        local_file_path = path
+    elif is_url(path):
+        local_file_path = download_file(path, get_temporary_directory())
+    elif not path.endswith(".star"):
+        # Get file from repository
+        available_files = search_repos_for_files(path)
+        local_file_path = download_file(available_files, get_temporary_directory())
+
+    # Special file names
+    if local_file_path.endswith("DotStarSettings.star"):
+        load_settings(local_file_path)
+        save_settings()
+    elif local_file_path.endswith("Compile.star"):
+        compile_file(local_file_path)
+    elif local_file_path.endswith("Run.star"):
+        open_local_file(local_file_path, run=True)
+    # Normal DotStar files
+    else:
+        if result.verify:
+            #Verify the file
+            pass
+        elif result.run:
+            #Run the file
+            open_local_file(local_file_path, run=True)
+        elif result.install:
+            #Install the file
+            open_local_file(local_file_path, install=True)
+        else:
+            #Open the file
+            open_local_file(local_file_path)
 
 def open_local_file(file_path, run=False, install=False):
     """

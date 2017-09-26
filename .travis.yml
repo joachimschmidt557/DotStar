@@ -6,7 +6,7 @@
     - 3.6-dev
     - nightly
   script:
-    - python $PWD/DotStar/DotStar.py -h
-    - python $PWD/DotStar/DotStar.py refresh listall
-    - python $PWD/DotStar/DotStar.py -y -r https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star
-    - python $PWD/DotStar/DotStar.py -y $PWD/DotStar/Compile.star
+    - python $PWD/DotStar -h
+    - python $PWD/DotStar refresh listall
+    - python $PWD/DotStar -y -r https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star
+    - python $PWD/DotStar -y $PWD/DotStar/Compile.star

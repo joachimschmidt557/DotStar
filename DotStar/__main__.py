@@ -97,9 +97,16 @@ def user_consent(message):
         return True
     return False
 
-def open_file(file_path, run=False, install=False):
+def open_file():
     """
-    Opens a .star file
+    Does whats necessary to process the file and
+    afterwards opens it
+    """
+
+def open_local_file(file_path, run=False, install=False):
+    """
+    Opens a .star file which is on the local hard-drive
+    of the computer
     """
     try:
         # Extract file to temporary directory
@@ -137,7 +144,7 @@ def open_file(file_path, run=False, install=False):
                         # Check if the dependecy is installed
 
                         # Install dependency
-                        open_file(dependency["File"], install=True)
+                        open_local_file(dependency["File"], install=True)
 
                 # Check the type
                 if "Application Information" in data:
@@ -455,9 +462,9 @@ if __name__ == "__main__":
             compile_file(input_file)
         elif input_file.endswith("Run.star"):
             if is_url(input_file):
-                open_file(download_file(input_file, get_temporary_directory()), run=True)
+                open_local_file(download_file(input_file, get_temporary_directory()), run=True)
             else:
-                open_file(input_file, run=True)
+                open_local_file(input_file, run=True)
         # Normal DotStar files
         else:
             if result.verify:
@@ -466,21 +473,21 @@ if __name__ == "__main__":
             elif result.run:
                 #Run the file
                 if is_url(input_file):
-                    open_file(download_file(input_file, get_temporary_directory()), run=True)
+                    open_local_file(download_file(input_file, get_temporary_directory()), run=True)
                 else:
-                    open_file(input_file, run=True)
+                    open_local_file(input_file, run=True)
             elif result.install:
                 #Install the file
                 if is_url(input_file):
-                    open_file(download_file(input_file, get_temporary_directory()), install=True)
+                    open_local_file(download_file(input_file, get_temporary_directory()), install=True)
                 else:
-                    open_file(input_file, install=True)
+                    open_local_file(input_file, install=True)
             else:
                 #Open the file
                 if is_url(input_file):
-                    open_file(download_file(input_file, get_temporary_directory()))
+                    open_local_file(download_file(input_file, get_temporary_directory()))
                 else:
-                    open_file(input_file)
+                    open_local_file(input_file)
 
     # Finished, now clean up
     logging.shutdown()

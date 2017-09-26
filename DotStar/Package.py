@@ -36,8 +36,7 @@ def compile_package():
     """
     print("Compiling DotStar...")
     print("Creating Windows binaries")
-    if sys.version_info == (3, 4):
-        os.system("py -m py2exe.build_exe DotStar.py")
+    os.system("py -m py2exe.build_exe DotStar.py")
     print("Creating Linux binaries")
     print("Creating macOS binaries")
     print("Creating installers")

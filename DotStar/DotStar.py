@@ -436,11 +436,11 @@ if __name__ == "__main__":
         elif input_file == "listall":
             print("Following files are available: ")
             for item in list_all_repo_files():
-                print(item["Name"])
+                print(" - " + item["Name"])
         elif input_file == "listinstalled":
             print("Following files are installed: ")
             for item in list_all_repo_files():
-                print(item["Name"])
+                print(" - " + item["Name"])
         elif input_file.endswith("DotStarSettings.star"):
             load_settings(input_file)
             save_settings()

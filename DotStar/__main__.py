@@ -42,7 +42,9 @@ DEFAULT_SETTINGS = {
     {
         "Allow non-local sources": True,
         "Allow unsigned files": True,
-        "Allow downloading non-.star files": True
+        "Allow un-checksumed files": True,
+        "Allow downloading non-.star files": True,
+        "Always allow running scripts": False
     },
     "Logging":
     {
@@ -303,7 +305,7 @@ def refresh_local_repo():
 
 def list_all_repos():
     """
-    Lists all repos
+    Lists all repositories
     """
     return settings["Repositories"]
 
@@ -355,6 +357,11 @@ def list_installed_files():
     """
     installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
     os.makedirs(installation_dir)
+
+def list_outdated_files():
+    """
+    Lists all outdated, installed files
+    """
 
 def search_installed_files(file_name):
     """

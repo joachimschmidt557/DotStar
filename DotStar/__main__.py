@@ -476,7 +476,7 @@ if __name__ == "__main__":
 
     # Go though input files
     for input_file in result.files:
-        # Special file names
+        # Commands
         logging.info("Processing file " + input_file)
         if input_file == "refresh":
             refresh_local_repo()
@@ -488,39 +488,9 @@ if __name__ == "__main__":
             print("Following files are installed: ")
             for item in list_all_repo_files():
                 print(" - " + item["Name"])
-        elif input_file.endswith("DotStarSettings.star"):
-            load_settings(input_file)
-            save_settings()
-        elif input_file.endswith("Compile.star"):
-            compile_file(input_file)
-        elif input_file.endswith("Run.star"):
-            if is_url(input_file):
-                open_local_file(download_file(input_file, get_temporary_directory()), run=True)
-            else:
-                open_local_file(input_file, run=True)
-        # Normal DotStar files
         else:
-            if result.verify:
-                #Verify the file
-                pass
-            elif result.run:
-                #Run the file
-                if is_url(input_file):
-                    open_local_file(download_file(input_file, get_temporary_directory()), run=True)
-                else:
-                    open_local_file(input_file, run=True)
-            elif result.install:
-                #Install the file
-                if is_url(input_file):
-                    open_local_file(download_file(input_file, get_temporary_directory()), install=True)
-                else:
-                    open_local_file(input_file, install=True)
-            else:
-                #Open the file
-                if is_url(input_file):
-                    open_local_file(download_file(input_file, get_temporary_directory()))
-                else:
-                    open_local_file(input_file)
+            # Normal file
+            open_file(input_file)
 
     # Finished, now clean up
     logging.shutdown()

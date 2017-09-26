@@ -301,6 +301,26 @@ def refresh_local_repo():
         download_file(repository, REPO_DIRECTORY)
     logging.info("Repositories refreshed successfully")
 
+def list_all_repos():
+    """
+    Lists all repos
+    """
+    return settings["Repositories"]
+
+def add_repo(url):
+    """
+    Adds a repository to the repo list
+    """
+    if not is_url(url):
+        logging.critical(url + " is not a respository URL.")
+    settings["Repositories"] += url
+    logging.info("Repository " + url + " added to the list!")
+
+def remove_repo(id_number):
+    """
+    Removes a repository at the given id
+    """
+
 def search_repos_for_files(file_name):
     """
     Searches the repos in the given settings for
@@ -368,12 +388,18 @@ if __name__ == "__main__":
 
     parser.add_argument("-l", "--log-level", choices=["debug", "info", "warning", "error"],
                         default="debug", help="Change the logging level")
-    #parser.add_argument("-n", "--no-gui", action="store_true", help="Don't show a GUI")
+    parser.add_argument("-y", "--yestoall", action="store_true", help="Automattically allow all actions")
+
+    # General flags
+    parser.add_argument("-s", "--search", action="store_true", help="Search all available files")
+    parser.add_argument("-l", "--lock", action="store_true", help="Prevent modifying or removing the installed file")
+
+    # File-specific flags
     parser.add_argument("-v", "--verify", action="store_true", help="Verify the file")
     parser.add_argument("-i", "--install", action="store_true", help="Install the file")
     parser.add_argument("-u", "--uninstall", action="store_true", help="Uninstall the file")
     parser.add_argument("-r", "--run", action="store_true", help="Run the file")
-    parser.add_argument("-y", "--yestoall", action="store_true", help="Automattically allow all actions")
+
     parser.add_argument("files", nargs='+', help="Input files")
 
     result = parser.parse_args()

@@ -16,8 +16,6 @@ Possible command-line arguments are:
 
 import sys
 import os
-import py2exe
-import PyInstaller
 
 def install_package():
     """

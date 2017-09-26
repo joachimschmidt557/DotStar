@@ -338,7 +338,6 @@ def list_all_repo_files():
     """
     Returns all files in the repos
     """
-    print("Following packages are available: ")
     all_repo_files = []
     # Check if repository directory exists
     if not os.path.exists(REPO_DIRECTORY):
@@ -435,9 +434,11 @@ if __name__ == "__main__":
         if input_file == "refresh":
             refresh_local_repo()
         elif input_file == "listall":
+            print("Following files are available: ")
             for item in list_all_repo_files():
                 print(item["Name"])
         elif input_file == "listinstalled":
+            print("Following files are installed: ")
             for item in list_all_repo_files():
                 print(item["Name"])
         elif input_file.endswith("DotStarSettings.star"):

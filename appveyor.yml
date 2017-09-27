@@ -33,10 +33,10 @@ test_script:
   # Note that you must use the environment variable %PYTHON% to refer to
   # the interpreter you're using - Appveyor does not do anything special
   # to put the Python version you want to use on PATH.
-  - "%PYTHON%\\python.exe DotStar -h"
-  - "%PYTHON%\\python.exe DotStar refresh listall"
-  - "%PYTHON%\\python.exe DotStar -y -r https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star"
-  - "%PYTHON%\\python.exe DotStar -y DotStar\\Compile.star"
+  - "%PYTHON%\\python.exe DotStar\\DotStar.py -h"
+  - "%PYTHON%\\python.exe DotStar\\DotStar.py refresh listall"
+  - "%PYTHON%\\python.exe DotStar\\DotStar.py -y -r https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star"
+  - "%PYTHON%\\python.exe DotStar\\DotStar.py -y DotStar\\Compile.star"
 
 #after_test:
   # This step builds your wheels.

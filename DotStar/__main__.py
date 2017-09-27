@@ -8,14 +8,36 @@ import logging
 import DotStar
 __version__ = DotStar.__version__
 
-from DotStar import load_settings
-from DotStar import save_settings
 from DotStar import open_file
 from DotStar import refresh_local_repo
 from DotStar import list_all_repo_files
 from DotStar import compile_file
 
 settings = None
+
+def load_settings(settings_file=SETTINGS_FILE):
+    """
+    Loads the user-defined settings. If these don't
+    exist, loads the default settings.
+    """
+    global settings
+    try:
+        with open(settings_file) as settings_json:
+            settings = json.load(settings_json)
+    except:
+        settings = DEFAULT_SETTINGS
+
+def save_settings():
+    """
+    Save the settings into the Settings JSON file.
+    """
+    global settings
+    try:
+        settings_file = SETTINGS_FILE
+        with open(settings_file, 'w') as settings_json:
+            json.dump(settings, settings_json)
+    except:
+        logging.error("Couldn't update settings")
 
 if __name__ == "__main__":
     # Main code goes here

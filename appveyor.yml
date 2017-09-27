@@ -35,7 +35,7 @@ test_script:
   # to put the Python version you want to use on PATH.
   - "%PYTHON%\\python.exe DotStar\\DotStar.py -h"
   - "%PYTHON%\\python.exe DotStar\\DotStar.py refresh listall"
-  - "%PYTHON%\\python.exe DotStar\\DotStar.py -y -r https://github.com/joachimschmidt557/DotStarTemplatePackage/raw/master/Test.star"
+  - "%PYTHON%\\python.exe DotStar\\DotStar.py -y -r DotStarTemplatePackage"
   - "%PYTHON%\\python.exe DotStar\\DotStar.py -y DotStar\\Compile.star"
 
 #after_test:

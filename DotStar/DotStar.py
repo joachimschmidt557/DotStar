@@ -110,6 +110,7 @@ def open_file(path, run=False, install=False, verify=False):
         local_file_path = download_file(path, get_temporary_directory())
     elif not path.endswith(".star"):
         # Get file from repository
+        logging.info("Searching repositories for " + path)
         available_files = search_repos_for_files(path)
         local_file_path = download_file(available_files, get_temporary_directory())
 

@@ -112,7 +112,7 @@ def open_file(path, run=False, install=False, verify=False):
         # Get file from repository
         logging.info("Searching repositories for " + path)
         available_files = search_repos_for_files(path)
-        local_file_path = download_file(available_files, get_temporary_directory())
+        local_file_path = download_file(available_files[0]["URL"], get_temporary_directory())
 
     # Special file names
     if local_file_path.endswith("DotStarSettings.star"):
@@ -369,17 +369,12 @@ def search_repos_for_files(file_name):
     Searches the repos in the given settings for
     the specified file (without .star)
     """
-    global_repo_data = {}
-    # Get all files in the repository directory
-    for (dirpath, dirnames, filenames) in os.walk(REPO_DIRECTORY):
-        for filename in filenames:
-            with open(filename) as repo_json:
-                global_repo_data.update(json.load(repo_json))
-    return filter(lambda item: item["Name"] == file_name, global_repo_data)
+    global_repo_data = list_all_repo_files()
+    return list(filter(lambda item: item["Name"] == file_name, global_repo_data))
 
 def list_all_repo_files():
     """
-    Returns all files in the repos
+    Returns all files inside the repos
     """
     all_repo_files = []
     # Check if repository directory exists

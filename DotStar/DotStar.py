@@ -112,6 +112,10 @@ def open_file(path, run=False, install=False, verify=False):
         # Get file from repository
         logging.info("Searching repositories for " + path)
         available_files = search_repos_for_files(path)
+        if len(available_files) < 1:
+            logging.error("No package found in the repositories")
+        if len(available_files) > 1:
+            pass
         local_file_path = download_file(available_files[0]["URL"], get_temporary_directory())
 
     # Special file names

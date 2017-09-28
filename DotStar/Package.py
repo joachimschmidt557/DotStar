@@ -37,7 +37,7 @@ def compile_package():
     print("Compiling DotStar...")
     os.system("pyinstaller DotStar")
     print("Creating Windows binaries")
-    os.system("python -m py2exe.build_exe DotStar")
+    os.system("python3 -m py2exe.build_exe DotStar")
     print("Creating Linux binaries")
     print("Creating macOS binaries")
     print("Creating installers")

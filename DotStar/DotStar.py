@@ -102,6 +102,7 @@ def open_file(path, run=False, install=False, verify=False):
     Does whats necessary to process the file and
     afterwards opens it
     """
+    logging.info("Processing file " + input_file)
     # Retrieve the file
     local_file_path = ""
     if os.path.isfile(path):
@@ -114,9 +115,11 @@ def open_file(path, run=False, install=False, verify=False):
         available_files = search_repos_for_files(path)
         if len(available_files) < 1:
             logging.error("No package found in the repositories")
+            return
         if len(available_files) > 1:
             pass
-        local_file_path = download_file(available_files[0]["URL"], get_temporary_directory())
+        else:
+            local_file_path = download_file(available_files[0]["URL"], get_temporary_directory())
 
     # Special file names
     if local_file_path.endswith("DotStarSettings.star"):
@@ -324,13 +327,13 @@ def is_url(path):
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
     return bool(regex.match(path))
 
-def download_file(url, folder_path):
+def download_file(url, folder_path, file_name="Temp.star"):
     """
     Downloads a .star file and returns the file path
     of the downloaded file
     """
     logging.info("Downloading " + url)
-    file_path = os.path.join(folder_path, "Temp.star")
+    file_path = os.path.join(folder_path, file_name)
     r = requests.get(url)
     with open(file_path, "wb") as dotstarfile:
         dotstarfile.write(r.content)
@@ -343,10 +346,24 @@ def refresh_local_repo():
     """
     if not os.path.exists(REPO_DIRECTORY):
         os.makedirs(REPO_DIRECTORY)
+    repo_id = 0
     for repository in settings["Repositories"]:
         # Download file
-        download_file(repository, REPO_DIRECTORY)
+        download_file(repository, REPO_DIRECTORY, file_name="Repo" + str(repo_id) + ".star")
+        repo_id += 1
     logging.info("Repositories refreshed successfully")
+
+def clear_local_repo():
+    """
+    Clears the whole local repo
+    """
+    if not os.path.exists(REPO_DIRECTORY):
+        os.makedirs(REPO_DIRECTORY)
+        logging.info("Local repository is already empty")
+        return
+    shutil.rmtree(REPO_DIRECTORY)
+    os.makedirs(REPO_DIRECTORY)
+    logging.info("Local repository cleared")
 
 def list_all_repos():
     """
@@ -477,9 +494,10 @@ if __name__ == "__main__":
     # Go though input files
     for input_file in result.files:
         # Commands
-        logging.info("Processing file " + input_file)
         if input_file == "refresh":
             refresh_local_repo()
+        elif input_file == "clear":
+            clear_local_repo()
         elif input_file == "listall":
             print("Following files are available: ")
             for item in list_all_repo_files():

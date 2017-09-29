@@ -428,7 +428,7 @@ def list_installed_files():
     if not os.path.exists(installation_dir):
         os.makedirs(installation_dir)
         logging.info("No files installed yet.")
-        return
+        return []
     onlyfiles = [f for f in os.listdir(installation_dir) if os.path.isfile(os.path.join(installation_dir, f))]
     return onlyfiles
 

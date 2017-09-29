@@ -390,6 +390,11 @@ def remove_repo(id_number):
     """
     Removes a repository at the given id
     """
+    try:
+        del settings["Repositories"][id_number]
+        logging.error("Repository with id " + str(id_number) + " removed")
+    except IndexError:
+        logging.error("Repository with id " + str(id_number) + " doesn't exist")
 
 def search_repos_for_files(file_name):
     """
@@ -416,10 +421,16 @@ def list_all_repo_files():
 
 def list_installed_files():
     """
-    Lists all installed files
+    Returns a list with filenames (absoulte path) of
+    installed files
     """
     installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
-    os.makedirs(installation_dir)
+    if not os.path.exists(installation_dir):
+        os.makedirs(installation_dir)
+        logging.info("No files installed yet.")
+        return
+    onlyfiles = [f for f in os.listdir(installation_dir) if os.path.isfile(os.path.join(installation_dir, f))]
+    return onlyfiles
 
 def list_outdated_files():
     """

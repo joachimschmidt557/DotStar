@@ -106,4 +106,5 @@ ENV/
 # DotStar specific
 */dotstar.star
 */Repositories
+*/Packages
 */DotStarSettings.star

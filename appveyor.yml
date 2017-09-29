@@ -50,6 +50,7 @@ artifacts:
   # bdist_wheel puts your built wheel in the dist directory
   - path: dist\
   - path: build\
+  - path: dotstar.star
 
 #on_success:
 #  You can use this step to upload your artifacts to a public website.

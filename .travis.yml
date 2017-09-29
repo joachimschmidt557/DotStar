@@ -1,12 +1,15 @@
-  language: python
-  python:
-    - 3.4
-    - 3.5
-    - 3.6
-    - 3.6-dev
-    - nightly
-  script:
-    - python $PWD/DotStar/DotStar.py -h
-    - python $PWD/DotStar/DotStar.py refresh listall
-    - python $PWD/DotStar/DotStar.py -y -r DotStarTemplatePackage
-    - python $PWD/DotStar/DotStar.py -y $PWD/DotStar/Compile.star
+language: python
+os:
+  - linux
+  - osx
+python:
+  - 3.4
+  - 3.5
+  - 3.6
+  - 3.6-dev
+  - nightly
+script:
+  - python $PWD/DotStar/DotStar.py -h
+  - python $PWD/DotStar/DotStar.py refresh listall
+  - python $PWD/DotStar/DotStar.py -y -r DotStarTemplatePackage
+  - python $PWD/DotStar/DotStar.py -y $PWD/DotStar/Compile.star

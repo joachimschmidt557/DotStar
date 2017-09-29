@@ -530,8 +530,8 @@ if __name__ == "__main__":
                 print(" - " + item["Name"])
         elif input_file == "listinstalled":
             print("Following files are installed: ")
-            for item in list_all_repo_files():
-                print(" - " + item["Name"])
+            for item in list_installed_files():
+                print(item)
         else:
             # Normal file
             action = '0'

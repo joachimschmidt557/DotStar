@@ -49,7 +49,7 @@ test_script:
 artifacts:
   # bdist_wheel puts your built wheel in the dist directory
   - path: dist\
-  - path: build\
+  #- path: build\
   - path: dotstar.star
 
 #on_success:

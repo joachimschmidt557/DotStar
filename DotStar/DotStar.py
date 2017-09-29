@@ -33,6 +33,13 @@ REPO_DIRECTORY = "Repositories"
 
 CURRENT_PLATFORM = sys.platform
 CURRENT_VERSION = StrictVersion(__version__)
+ACTIONS = [
+    'r',    # Run the package
+    'i',    # Install the package
+    'u',    # Uninstall the package
+    'v',    # Verify the package
+    '0'     # Let the user decide
+]
 DEFAULT_SETTINGS = {
     "Repositories":
     [
@@ -97,12 +104,12 @@ def user_consent(message):
         return True
     return False
 
-def open_file(path, run=False, install=False, verify=False):
+def open_file(path, action='0'):
     """
     Does whats necessary to process the file and
     afterwards opens it
     """
-    logging.info("Processing file " + input_file)
+    logging.info("Processing file " + path)
     # Retrieve the file
     local_file_path = ""
     if os.path.isfile(path):
@@ -128,23 +135,12 @@ def open_file(path, run=False, install=False, verify=False):
     elif local_file_path.endswith("Compile.star"):
         compile_file(local_file_path)
     elif local_file_path.endswith("Run.star"):
-        open_local_file(local_file_path, run=True)
+        open_local_file(local_file_path, action='r')
     # Normal DotStar files
     else:
-        if result.verify:
-            #Verify the file
-            pass
-        elif result.run:
-            #Run the file
-            open_local_file(local_file_path, run=True)
-        elif result.install:
-            #Install the file
-            open_local_file(local_file_path, install=True)
-        else:
-            #Open the file
-            open_local_file(local_file_path)
+        open_local_file(local_file_path, action=action)
 
-def open_local_file(file_path, run=False, install=False):
+def open_local_file(file_path, action='0'):
     """
     Opens a .star file which is on the local hard-drive
     of the computer
@@ -185,7 +181,7 @@ def open_local_file(file_path, run=False, install=False):
                         # Check if the dependecy is installed
 
                         # Install dependency
-                        open_local_file(dependency["File"], install=True)
+                        open_local_file(dependency["File"], action='i')
 
                 # Check the type
                 if "Application Information" in data:
@@ -195,11 +191,11 @@ def open_local_file(file_path, run=False, install=False):
                     #commands = info["Commands"]
 
                     # Check our specified action
-                    if run:
+                    if action == 'r':
                         # Run the app
                         if user_consent("Run the File? (y/n): "):
                             os.system("python " + package_file + " run")
-                    elif install:
+                    elif action == 'i':
                         # Install the app
                         # Copy the package to the installation directory
                         installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
@@ -428,6 +424,13 @@ def search_installed_files(file_name):
     output = []
     raise NotImplementedError
 
+def uninstall_file(file_path):
+    """
+    Runs the uninstall script in the package and
+    deletes the file afterwards
+    """
+
+
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
                                                         "DotStar"),
                             create_directory=True):
@@ -489,7 +492,9 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.CRITICAL)
 
     # Yes to all ?
-    yes_to_all = result.yestoall
+    yes_to_all = settings["Security"]["Always allow running scripts"]
+    if result.yestoall:
+        yes_to_all = True
 
     # Go though input files
     for input_file in result.files:
@@ -508,7 +513,16 @@ if __name__ == "__main__":
                 print(" - " + item["Name"])
         else:
             # Normal file
-            open_file(input_file)
+            action = '0'
+            if result.verify:
+                action = 'v'
+            elif result.run:
+                action = 'r'
+            elif result.install:
+                action = 'i'
+            elif result.uninstall:
+                action = 'u'
+            open_file(input_file, action=action)
 
     # Finished, now clean up
     logging.shutdown()

@@ -205,10 +205,20 @@ def open_local_file(file_path, action='0'):
                         # Additional installation steps
                         if user_consent("Run the python script for additional installation steps? (y/n): "):
                             os.system("python " + package_file + " install")
+                        logging.info("Installation successful")
+                    elif action == 'u':
+                        # Additional uninstallation steps
+                        if user_consent("Run the python script for additional uninstalltion steps? (y/n): "):
+                            os.system("python " + package_file + " uninstall")
+
+                        # Delete the file
+                        os.remove(file_path)
+                        logging.info("Removed file")
                     else:
                         # If no action is specified, let the user decide
                         print(info["Friendly Name"])
                         print("Version " + info["Version"])
+                        print(info["Description"])
                         print("Possible actions: ")
 
                 elif "Document Information" in data:

@@ -201,8 +201,11 @@ def open_local_file(file_path, action='0'):
                         # Install the app
                         # Copy the package to the installation directory
                         installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
-                        os.makedirs(installation_dir)
-                        shutil.copy(file_path, installation_dir)
+                        new_file_name = info["Name"]
+                        if not os.path.exists(installation_dir):
+                            os.makedirs(installation_dir)
+                        installed_file_path = shutil.copy(file_path, installation_dir)
+                        os.rename(installed_file_path, os.path.join(installation_dir, new_file_name))
 
                         # Additional installation steps
                         if user_consent("Run the python script for additional installation steps? (y/n): "):

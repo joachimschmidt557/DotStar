@@ -151,6 +151,10 @@ def open_file(path, action='0'):
     else:
         open_local_file(local_file_path, action=action)
 
+    # Clean up if necessary
+    if local_file_path.endswith("Temp.star"):
+        shutil.rmtree(os.path.dirname(local_file_path))
+
 def open_local_file(file_path, action='0'):
     """
     Opens a .star file which is on the local hard-drive

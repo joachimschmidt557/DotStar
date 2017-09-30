@@ -119,16 +119,25 @@ def open_file(path, action='0'):
     elif is_url(path):
         local_file_path = download_file(path, get_temporary_directory())
     elif not path.endswith(".star"):
-        # Get file from repository
-        logging.info("Searching repositories for " + path)
-        available_files = search_repos_for_files(path)
-        if len(available_files) < 1:
-            logging.error("No package found in the repositories")
-            return
+        # Check if the file is an installed file
+        logging.info("Searching installed files for " + path)
+        available_files = search_installed_files(path)
         if len(available_files) > 1:
             pass
+        if len(available_files) == 1:
+            local_file_path = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY,
+                                           path + ".star")
         else:
-            local_file_path = download_file(available_files[0]["URL"], get_temporary_directory())
+            # If the file is not installed, get file from repository
+            logging.info("Searching repositories for " + path)
+            available_files = search_repos_for_files(path)
+            if len(available_files) < 1:
+                logging.error("No package found in the repositories")
+                return
+            if len(available_files) > 1:
+                pass
+            else:
+                local_file_path = download_file(available_files[0]["URL"], get_temporary_directory())
 
     # Special file names
     if local_file_path.endswith("DotStarSettings.star"):
@@ -201,7 +210,7 @@ def open_local_file(file_path, action='0'):
                         # Install the app
                         # Copy the package to the installation directory
                         installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
-                        new_file_name = info["Name"]
+                        new_file_name = info["Name"] + ".star"
                         if not os.path.exists(installation_dir):
                             os.makedirs(installation_dir)
                         installed_file_path = shutil.copy(file_path, installation_dir)
@@ -459,8 +468,9 @@ def search_installed_files(file_name):
     Searches the installed .star files for matching
     files
     """
-    output = []
-    raise NotImplementedError
+    all_installed_files = list_installed_files()
+    file_name_with_extension = file_name + ".star"
+    return list(filter(lambda item: item == file_name_with_extension, all_installed_files))
 
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
                                                         "DotStar"),
@@ -549,7 +559,8 @@ if __name__ == "__main__":
                 print(item)
         # Repository manipulation commands
         elif result.search:
-            pass
+            for item in search_installed_files(input_file):
+                print(item)
         elif result.lock:
             pass
         elif result.add_repo:

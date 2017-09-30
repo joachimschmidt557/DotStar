@@ -56,7 +56,9 @@ DEFAULT_SETTINGS = {
     "Logging":
     {
         "Level": "debug"
-    }
+    },
+    "Locked files":
+    []
 }
 
 # VARIABLES
@@ -246,6 +248,17 @@ def open_local_file(file_path, action='0'):
     except FileNotFoundError:
         logging.critical("File doesn't exist!")
 
+def open_local_file_partially(file_path, file_name=PACKAGE_INFO_FILE):
+    """
+    Opens a local file and only extracts the given
+    file name from the archive
+    """
+    try:
+        # Extract file to temporary directory
+        temp_dir = get_temporary_directory()
+        logging.debug("Extracting file to temporary directory " + temp_dir)
+    except zipfile.BadZipfile:
+        pass
 
 def compile_file(file_path):
     """
@@ -383,7 +396,8 @@ def add_repo(url):
     """
     if not is_url(url):
         logging.critical(url + " is not a respository URL.")
-    settings["Repositories"] += url
+        return
+    settings["Repositories"].append(url)
     logging.info("Repository " + url + " added to the list!")
 
 def remove_repo(id_number):
@@ -391,8 +405,8 @@ def remove_repo(id_number):
     Removes a repository at the given id
     """
     try:
-        del settings["Repositories"][id_number]
-        logging.error("Repository with id " + str(id_number) + " removed")
+        del (settings["Repositories"])[int(id_number)]
+        logging.info("Repository with id " + str(id_number) + " removed")
     except IndexError:
         logging.error("Repository with id " + str(id_number) + " doesn't exist")
 
@@ -445,13 +459,6 @@ def search_installed_files(file_name):
     output = []
     raise NotImplementedError
 
-def uninstall_file(file_path):
-    """
-    Runs the uninstall script in the package and
-    deletes the file afterwards
-    """
-
-
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
                                                         "DotStar"),
                             create_directory=True):
@@ -484,6 +491,7 @@ if __name__ == "__main__":
     # General flags
     parser.add_argument("-s", "--search", action="store_true", help="Search all available files")
     parser.add_argument("-o", "--lock", action="store_true", help="Prevent modifying or removing the installed file")
+    parser.add_argument("-n", "--unlock", action="store_true", help="Unlock the installed file")
 
     # Repository flags
     parser.add_argument("-a", "--add-repo", action="store_true", help="Adds a repository")
@@ -532,6 +540,21 @@ if __name__ == "__main__":
             print("Following files are installed: ")
             for item in list_installed_files():
                 print(item)
+        elif input_file == "listrepos":
+            print("Following repositories are setted: ")
+            for item in list_all_repos():
+                print(item)
+        # Repository manipulation commands
+        elif result.search:
+            pass
+        elif result.lock:
+            pass
+        elif result.add_repo:
+            add_repo(input_file)
+            save_settings()
+        elif result.remove_repo:
+            remove_repo(input_file)
+            save_settings()
         else:
             # Normal file
             action = '0'

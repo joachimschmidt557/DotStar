@@ -13,3 +13,5 @@ script:
   - python $PWD/DotStar/DotStar.py refresh listall
   - python $PWD/DotStar/DotStar.py -y -r DotStarTemplatePackage
   - python $PWD/DotStar/DotStar.py -y $PWD/DotStar/Compile.star
+notifications:
+  email: false

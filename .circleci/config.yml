@@ -41,10 +41,28 @@ jobs:
         
       # run tests!
       - run:
-          name: run tests
+          name: DotStar info
           command: |
             . venv/bin/activate
             python DotStar/DotStar.py -h
+            
+      - run:
+          name: Repositories
+          command: |
+            . venv/bin/activate
+            python DotStar/DotStar.py refresh listall
+            
+      - run:
+          name: Try running a package
+          command: |
+            . venv/bin/activate
+            python DotStar/DotStar.py -r -y DotStarTemplatePackage
+            
+      - run:
+          name: Compile
+          command: |
+            . venv/bin/activate
+            python DotStar/DotStar.py -y DotStar/Compile.star
 
       - store_artifacts:
           path: test-reports

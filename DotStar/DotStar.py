@@ -111,6 +111,7 @@ def open_file(path, action='0'):
     afterwards opens it
     """
     logging.info("Processing file " + path)
+
     # Retrieve the file
     local_file_path = ""
     if os.path.isfile(path):
@@ -118,16 +119,20 @@ def open_file(path, action='0'):
     elif is_url(path):
         local_file_path = download_file(path, get_temporary_directory())
     elif not path.endswith(".star"):
-        # Check if the file is an installed file
+        # Check if the file is installed
         logging.info("Searching installed files for " + path)
         available_files = search_installed_files(path)
         if len(available_files) > 1:
             pass
         if len(available_files) == 1:
-            local_file_path = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY,
-                                           path + ".star")
+            if not(is_locked(path) and (action == 'i' or action == 'u')):
+                local_file_path = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY,
+                                            path + ".star")
+            else:
+                logging.error(path + " is locked. To manipulate this file, unlock it first.")
+                return
         else:
-            # If the file is not installed, get file from repository
+            # If the file is not installed, try to get file from repository
             logging.info("Searching repositories for " + path)
             available_files = search_repos_for_files(path)
             if len(available_files) < 1:
@@ -483,6 +488,7 @@ def lock_installed_file(file_name):
 
     # Lock the file
     settings["Locked files"].append(file_name)
+    logging.info(file_name + " successfully locked.")
 
 def unlock_locked_file(file_name):
     """
@@ -496,6 +502,8 @@ def unlock_locked_file(file_name):
 
     # Unlock the file
     settings["Locked files"].remove(file_name)
+    logging.info(file_name + " successfully unlocked.")
+
 
 def is_locked(file_name):
     """

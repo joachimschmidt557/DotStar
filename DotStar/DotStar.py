@@ -407,7 +407,8 @@ def list_all_repos():
 
 def add_repo(url):
     """
-    Adds a repository to the repo list
+    Adds a repository to the repo list. Requires
+    save_settings to have any effect.
     """
     if not is_url(url):
         logging.critical(url + " is not a respository URL.")
@@ -417,7 +418,8 @@ def add_repo(url):
 
 def remove_repo(id_number):
     """
-    Removes a repository at the given id
+    Removes a repository at the given id.
+    Requires save_settings to have any effect.
     """
     try:
         del (settings["Repositories"])[int(id_number)]
@@ -564,6 +566,8 @@ if __name__ == "__main__":
             for item in search_installed_files(input_file):
                 print(item)
         elif result.lock:
+            pass
+        elif result.unlock:
             pass
         elif result.add_repo:
             add_repo(input_file)

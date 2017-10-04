@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/joachimschmidt557/DotStar.svg?branch=master)](https://travis-ci.org/joachimschmidt557/DotStar)
 [![Build status](https://ci.appveyor.com/api/projects/status/oocppvl6ct23p6q7?svg=true)](https://ci.appveyor.com/project/joachimschmidt557/dotstar)
 [![CircleCI](https://circleci.com/gh/joachimschmidt557/DotStar.svg?style=svg)](https://circleci.com/gh/joachimschmidt557/DotStar)
+[![Code Health](https://landscape.io/github/joachimschmidt557/DotStar/master/landscape.svg?style=flat)](https://landscape.io/github/joachimschmidt557/DotStar/master)
 
 Imagine distributing apps for multiple platforms in just one package. Or sending a Word and a Pages document in one file and automatically opening the file which can be run on your PC? Ever felt the urge to send a `FileName.*` file? 
 

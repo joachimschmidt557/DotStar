@@ -27,6 +27,11 @@ only **one** Python file called `DotStar.py`. This file can be run directly with
 command-line arguments to manipulate packages or can be imported from any other
 Python file and used. The API will be available soon.
 
+## Creating your own .star files
+
+For a starting point, clone or download
+[the template package repository](https://github.com/joachimschmidt557/DotStarTemplatePackage).
+
 ## Installation
 
 If you already have DotStar installed, upgrade it by using this command:

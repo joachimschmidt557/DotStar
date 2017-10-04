@@ -463,6 +463,50 @@ def list_installed_files():
     onlyfiles = [f for f in os.listdir(installation_dir) if os.path.isfile(os.path.join(installation_dir, f))]
     return onlyfiles
 
+def is_installed(file_name):
+    """
+    Returns whether file_name is installed or not
+    """
+    if len(search_installed_files(file_name)) == 1:
+        return True
+    return False
+
+def lock_installed_file(file_name):
+    """
+    Locks the specified installed file (without .star).
+    Requires save_settings to have any effect.
+    """
+    # Check if the package is really installed
+    if not is_installed(file_name):
+        logging.error(file_name + " is not installed yet.")
+        return
+
+    # Lock the file
+    settings["Locked files"].append(file_name)
+
+def unlock_locked_file(file_name):
+    """
+    Unlocks the specified locked file (without .star).
+    Requires save_settings to have any effect.
+    """
+    # Check if the package is even locked
+    if not is_locked(file_name):
+        logging.error(file_name + " is not locked.")
+        return
+
+    # Unlock the file
+    settings["Locked files"].remove(file_name)
+
+def is_locked(file_name):
+    """
+    Returns whether file_name is locked or not
+    """
+    if not is_installed(file_name):
+        return False
+    if file_name in settings["Locked files"]:
+        return True
+    return False
+
 def list_outdated_files():
     """
     Lists all outdated, installed files
@@ -566,9 +610,11 @@ if __name__ == "__main__":
             for item in search_installed_files(input_file):
                 print(item)
         elif result.lock:
-            pass
+            lock_installed_file(input_file)
+            save_settings()
         elif result.unlock:
-            pass
+            unlock_locked_file(input_file)
+            save_settings()
         elif result.add_repo:
             add_repo(input_file)
             save_settings()

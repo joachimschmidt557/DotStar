@@ -574,7 +574,7 @@ if __name__ == "__main__":
         else:
             # Normal file
             action = '0'
-            elif result.run:
+            if result.run:
                 action = 'r'
             elif result.install:
                 action = 'i'

@@ -37,7 +37,6 @@ ACTIONS = [
     'r',    # Run the package
     'i',    # Install the package
     'u',    # Uninstall the package
-    'v',    # Verify the package
     '0'     # Let the user decide
 ]
 DEFAULT_SETTINGS = {
@@ -515,7 +514,6 @@ if __name__ == "__main__":
     parser.add_argument("-x", "--remove-repo", action="store_true", help="Removes a repository")
 
     # File-specific flags
-    parser.add_argument("-v", "--verify", action="store_true", help="Verify the file")
     parser.add_argument("-i", "--install", action="store_true", help="Install the file")
     parser.add_argument("-u", "--uninstall", action="store_true", help="Uninstall the file")
     parser.add_argument("-r", "--run", action="store_true", help="Run the file")
@@ -576,8 +574,6 @@ if __name__ == "__main__":
         else:
             # Normal file
             action = '0'
-            if result.verify:
-                action = 'v'
             elif result.run:
                 action = 'r'
             elif result.install:

@@ -19,6 +19,7 @@ import argparse
 import re
 import requests
 import hashlib
+import yaml
 
 # INFO
 __version__ = "0.1"

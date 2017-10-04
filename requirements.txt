@@ -1,3 +1,4 @@
 requests
 pyinstaller
 py2exe
+pyyaml

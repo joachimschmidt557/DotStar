@@ -65,5 +65,5 @@ jobs:
             python DotStar/DotStar.py -y DotStar/Compile.star
 
       - store_artifacts:
-          path: test-reports
-          destination: test-reports
+          path: build
+          destination: build

@@ -26,3 +26,12 @@ DotStar should be as easy to use as possible. Therefore, it will be provided in
 only **one** Python file called `DotStar.py`. This file can be run directly with
 command-line arguments to manipulate packages or can be imported from any other
 Python file and used. The API will be available soon.
+
+## Installation
+
+If you already have DotStar installed, upgrade it by using this command:
+
+`dotstar -i dotstar`
+
+If you don't have DotStar installed, download the installers from the GitHub
+release page. Python is not required to operate DotStar.

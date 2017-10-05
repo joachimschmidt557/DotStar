@@ -179,8 +179,8 @@ def open_local_file(file_path, action='0'):
         package_info_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
         package_file = os.path.join(temp_dir, PACKAGE_FILE)
         try:
-            with open(package_info_file) as package_info_json:
-                data = json.load(package_info_json)
+            with open(package_info_file) as package_info_yaml:
+                data = yaml.load(package_info_yaml)
 
                 # Check the "DotStar Information area"
                 version_used_to_compile = StrictVersion(data["DotStar Information"]["Version"])
@@ -238,7 +238,7 @@ def open_local_file(file_path, action='0'):
 
                         # Delete the file
                         os.remove(file_path)
-                        logging.info("Removed file")
+                        logging.info("Removed file " + file_path)
                     else:
                         # If no action is specified, let the user decide
                         print(info["Friendly Name"])
@@ -246,15 +246,15 @@ def open_local_file(file_path, action='0'):
                         print(info["Description"])
                         print("Possible actions: ")
 
-                elif "Document Information" in data:
-                    # Type: Document package
-                    info = data["Document Information"]
-                    resources = info["Resources"]
-                    for resource in resources:
-                        pass
-                elif "Folder Information" in data:
-                    # Type: Folder package
-                    pass
+                #elif "Document Information" in data:
+                #    # Type: Document package
+                #    info = data["Document Information"]
+                #    resources = info["Resources"]
+                #    for resource in resources:
+                #        pass
+                #elif "Folder Information" in data:
+                #    # Type: Folder package
+                #    pass
                 else:
                     # Empty file
                     logging.warning("This file is an empty file.")
@@ -297,8 +297,8 @@ def compile_file(file_path):
         shutil.copytree(os.path.dirname(file_path), temp_dir)
 
         # Read the file into JSON
-        with open(file_path) as compilation_info_json:
-            other_data = json.load(compilation_info_json)
+        with open(file_path) as compilation_info_yaml:
+            other_data = yaml.load(compilation_info_yaml)
 
             # Get the output file name
             output_file = os.path.join(os.getcwd(), other_data["Application Information"]["Name"] + ".star")

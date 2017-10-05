@@ -36,7 +36,7 @@ test_script:
   - "%PYTHON%\\python.exe DotStar\\DotStar.py -h"
   - "%PYTHON%\\python.exe DotStar\\DotStar.py refresh listall"
   - "%PYTHON%\\python.exe DotStar\\DotStar.py -y -r DotStarTemplatePackage"
-  - "%PYTHON%\\python.exe DotStar\\DotStar.py -y DotStar\\Compile.star"
+  - "%PYTHON%\\python.exe DotStar\\DotStar.py -y DotStar\\Package.yml"
 
 #after_test:
   # This step builds your wheels.

@@ -25,7 +25,7 @@ import yaml
 __version__ = "0.1"
 
 # CONSTANTS
-PACKAGE_INFO_FILE = "Package.json"
+PACKAGE_INFO_FILE = "Package.yml"
 PACKAGE_FILE = "Package.py"
 SETTINGS_FILE = "DotStarSettings.star"
 FILE_CACHE_DIRECTORY = "Packages"
@@ -152,10 +152,10 @@ def open_file(path, action='0'):
     if local_file_path.endswith("DotStarSettings.star"):
         load_settings(local_file_path)
         save_settings()
-    elif local_file_path.endswith("Compile.star"):
+    elif local_file_path.endswith("Package.yml"):
         compile_file(local_file_path)
-    elif local_file_path.endswith("Run.star"):
-        open_local_file(local_file_path, action='r')
+    #elif local_file_path.endswith("Run.star"):
+    #    open_local_file(local_file_path, action='r')
     # Normal DotStar files
     else:
         open_local_file(local_file_path, action=action)
@@ -300,30 +300,30 @@ def compile_file(file_path):
         with open(file_path) as compilation_info_yaml:
             other_data = yaml.load(compilation_info_yaml)
 
-            # Get the output file name
-            output_file = os.path.join(os.getcwd(), other_data["Application Information"]["Name"] + ".star")
+        # Get the output file name
+        output_file = os.path.join(os.getcwd(), other_data["Application Information"]["Name"] + ".star")
 
-            # Create Package.json
-            package_json_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
+        # Create Package.json
+        package_yaml_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
 
-            # Create DotStar information area
-            data = {
-                "DotStar Information":
-                {
-                    "Version": str(__version__)
-                }
+        # Create DotStar information area
+        data = {
+            "DotStar Information":
+            {
+                "Version": str(__version__)
             }
-            # Append the other data to our DotStar info area
-            data.update(other_data)
+        }
+        # Append the other data to our DotStar info area
+        data.update(other_data)
 
-            # Write to Package.json
-            with open(package_json_file, 'w') as package_file:
-                json.dump(data, package_file)
+        # Write to Package.json
+        with open(package_yaml_file, 'w') as package_file:
+            yaml.dump(data, package_file)
 
-            # Run the python script for additional compilation steps
-            script_file = os.path.join(temp_dir, PACKAGE_FILE)
-            if user_consent("Run compilation script? (y/n): "):
-                os.system("python " + script_file + " compile")
+        # Run the python script for additional compilation steps
+        script_file = os.path.join(temp_dir, PACKAGE_FILE)
+        if user_consent("Run compilation script? (y/n): "):
+            os.system("python " + script_file + " compile")
 
         # Zip the folder
         compress_folder(temp_dir, output_file)

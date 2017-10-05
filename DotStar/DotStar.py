@@ -288,11 +288,6 @@ def compile_file(file_path):
     """
     logging.info("Attempting to compile " + file_path)
     try:
-        # Run the python script for additional compilation steps
-        script_file = os.path.join(temp_dir, PACKAGE_FILE)
-        if user_consent("Run compilation script? (y/n): "):
-            os.system("python " + script_file + " compile")
-
         # Create temporary folder to store the files into
         temp_dir = get_temporary_directory(create_directory=False)
         output_file = ""
@@ -323,6 +318,11 @@ def compile_file(file_path):
         # Write to Package.yml
         with open(package_yaml_file, 'w') as package_file:
             yaml.dump(data, package_file)
+
+        # Run the python script for additional compilation steps
+        script_file = os.path.join(temp_dir, PACKAGE_FILE)
+        if user_consent("Run compilation script? (y/n): "):
+            subprocess.run("python " + script_file + " compile", cwd=temp_dir)
 
         # Zip the folder
         compress_folder(temp_dir, output_file)

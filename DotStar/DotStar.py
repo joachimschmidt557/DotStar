@@ -344,16 +344,10 @@ def decompress_file(file_path, extract_path):
 
 def compress_folder(folder_path, zipfile_path):
     """
-    Compress a folder into a .star file
+    Compress a folder into a file (no adding of .zip extension)
     """
-    dir_to_zip_len = len(folder_path.rstrip(os.sep)) + 1
-    with zipfile.ZipFile(zipfile_path, "w", compression=zipfile.ZIP_DEFLATED) as z:
-        # Iterate over all files
-        for (dirpath, dirnames, filenames) in os.walk(folder_path):
-            for filename in filenames:
-                path = os.path.join(dirpath, filename)
-                entry = path[dir_to_zip_len:]
-                z.write(path, entry)
+    shutil.make_archive(zipfile_path, "zip", folder_path)
+    os.rename(zipfile_path + ".zip", zipfile_path)
 
 def is_url(path):
     """

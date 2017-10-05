@@ -568,6 +568,7 @@ if __name__ == "__main__":
 
     # General flags
     parser.add_argument("-s", "--search", action="store_true", help="Search all available files")
+    parser.add_argument("-f", "--find", action="store_true", help="Search all installed files")
     parser.add_argument("-o", "--lock", action="store_true", help="Prevent modifying or removing the installed file")
     parser.add_argument("-n", "--unlock", action="store_true", help="Unlock the installed file")
 
@@ -634,8 +635,11 @@ if __name__ == "__main__":
                 for item in all_repos:
                     print(" - " + item)
         # Repository manipulation commands
-        elif result.search:
+        elif result.find:
             for item in search_installed_files(input_file):
+                print(item)
+        elif result.search:
+            for item in search_repos_for_files(input_file):
                 print(item)
         elif result.lock:
             lock_installed_file(input_file)

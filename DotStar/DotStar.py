@@ -472,7 +472,6 @@ def list_installed_files():
     installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
     if not os.path.exists(installation_dir):
         os.makedirs(installation_dir)
-        logging.info("No files installed yet.")
         return []
     onlyfiles = [f for f in os.listdir(installation_dir) if os.path.isfile(os.path.join(installation_dir, f))]
     return onlyfiles
@@ -611,17 +610,29 @@ if __name__ == "__main__":
         elif input_file == "clear":
             clear_local_repo()
         elif input_file == "listall":
-            print("Following files are available: ")
-            for item in list_all_repo_files():
-                print(" - " + item["Name"])
+            all_available_files = list_all_repo_files()
+            if len(all_available_files) < 1:
+                print("No files available")
+            else:
+                print("Following files are available: ")
+                for item in all_available_files:
+                    print(" - " + item["Name"])
         elif input_file == "listinstalled":
-            print("Following files are installed: ")
-            for item in list_installed_files():
-                print(item)
+            all_installed_files = list_installed_files()
+            if len(all_installed_files) < 1:
+                print("No files installed yet.")
+            else:
+                print("Following files are installed: ")
+                for item in all_installed_files:
+                    print("- " + item)
         elif input_file == "listrepos":
-            print("Following repositories are setted: ")
-            for item in list_all_repos():
-                print(item)
+            all_repos = list_all_repos()
+            if len(all_repos) < 1:
+                print("No repositories setted")
+            else:
+                print("Following repositories are setted: ")
+                for item in all_repos:
+                    print(" - " + item)
         # Repository manipulation commands
         elif result.search:
             for item in search_installed_files(input_file):

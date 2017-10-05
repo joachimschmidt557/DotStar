@@ -10,7 +10,6 @@ import tempfile
 import zipfile
 import zlib
 import logging
-import json
 import shutil
 import platform
 import subprocess
@@ -44,7 +43,7 @@ ACTIONS = [
 DEFAULT_SETTINGS = {
     "Repositories":
     [
-        "https://raw.githubusercontent.com/joachimschmidt557/DotStarRepo/master/Master.json"
+        "https://raw.githubusercontent.com/joachimschmidt557/DotStarRepo/master/Master.yml"
     ],
     "Security":
     {
@@ -73,20 +72,20 @@ def load_settings(settings_file=SETTINGS_FILE):
     """
     global settings
     try:
-        with open(settings_file) as settings_json:
-            settings = json.load(settings_json)
+        with open(settings_file) as settings_yaml:
+            settings = yaml.load(settings_yaml)
     except:
         settings = DEFAULT_SETTINGS
 
 def save_settings():
     """
-    Save the settings into the Settings JSON file.
+    Save the settings into the Settings file.
     """
     global settings
     try:
         settings_file = SETTINGS_FILE
-        with open(settings_file, 'w') as settings_json:
-            json.dump(settings, settings_json)
+        with open(settings_file, 'w') as settings_yaml:
+            yaml.dump(settings, settings_yaml)
     except:
         logging.error("Couldn't update settings")
 
@@ -260,8 +259,8 @@ def open_local_file(file_path, action='0'):
                     logging.warning("This file is an empty file.")
         except FileNotFoundError:
             raise FileNotFoundError
-        except json.JSONDecodeError:
-            logging.critical("Error decoding JSON")
+        except yaml.YAMLError:
+            logging.critical("Error decoding YAML")
 
         # If necessary, clean up the temporary directory
         shutil.rmtree(temp_dir)
@@ -296,14 +295,14 @@ def compile_file(file_path):
         # Copy the necessary files into the folder
         shutil.copytree(os.path.dirname(file_path), temp_dir)
 
-        # Read the file into JSON
+        # Read the file
         with open(file_path) as compilation_info_yaml:
             other_data = yaml.load(compilation_info_yaml)
 
         # Get the output file name
         output_file = os.path.join(os.getcwd(), other_data["Application Information"]["Name"] + ".star")
 
-        # Create Package.json
+        # Create Package.yml
         package_yaml_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
 
         # Create DotStar information area
@@ -316,7 +315,7 @@ def compile_file(file_path):
         # Append the other data to our DotStar info area
         data.update(other_data)
 
-        # Write to Package.json
+        # Write to Package.yml
         with open(package_yaml_file, 'w') as package_file:
             yaml.dump(data, package_file)
 
@@ -333,8 +332,8 @@ def compile_file(file_path):
         shutil.rmtree(temp_dir)
     except FileNotFoundError as err:
         logging.critical("File doesn't exist " + str(err))
-    except json.JSONDecodeError:
-        logging.critical("Bad JSON")
+    except yaml.YAMLError:
+        logging.critical("Error decoding YAML")
 
 def decompress_file(file_path, extract_path):
     """
@@ -460,8 +459,8 @@ def list_all_repo_files():
     # Get all files in the repository directory
     onlyfiles = [f for f in os.listdir(REPO_DIRECTORY) if os.path.isfile(os.path.join(REPO_DIRECTORY, f))]
     for filename in onlyfiles:
-        with open(os.path.join(REPO_DIRECTORY, filename)) as repo_json:
-            all_repo_files += json.load(repo_json)["Packages"]
+        with open(os.path.join(REPO_DIRECTORY, filename)) as repo_yaml:
+            all_repo_files += yaml.load(repo_yaml)["Packages"]
     return all_repo_files
 
 def list_installed_files():

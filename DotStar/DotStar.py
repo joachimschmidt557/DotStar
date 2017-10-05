@@ -640,14 +640,14 @@ if __name__ == "__main__":
             save_settings()
         else:
             # Normal file
-            action = '0'
+            action_to_perform = '0'
             if result.run:
-                action = 'r'
+                action_to_perform = 'r'
             elif result.install:
-                action = 'i'
+                action_to_perform = 'i'
             elif result.uninstall:
-                action = 'u'
-            open_file(input_file, action=action)
+                action_to_perform = 'u'
+            open_file(input_file, action=action_to_perform)
 
     # Finished, now clean up
     logging.shutdown()

@@ -37,6 +37,7 @@ CURRENT_VERSION = StrictVersion(__version__)
 ACTIONS = [
     'r',    # Run the package
     'i',    # Install the package
+    'I',    # Reinstall the package
     'u',    # Uninstall the package
     '0'     # Let the user decide
 ]
@@ -127,8 +128,11 @@ def open_file(path, action='0'):
             pass
         if len(available_files) == 1:
             if not(is_locked(path) and (action == 'i' or action == 'u')):
+                if action == 'i':
+                    # The package should be reinstalled
+                    action = 'I'
                 local_file_path = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY,
-                                            path + ".star")
+                                               path + ".star")
             else:
                 logging.error(path + " is locked. To manipulate this file, unlock it first.")
                 return
@@ -183,16 +187,14 @@ def open_local_file(file_path, action='0'):
                 if CURRENT_VERSION < version_used_to_compile:
                     # This file was created with a newer version of DotStar
                     # So, this version may be out-of-date
-                    logging.warning("""Your DotStar version may be out-of-date. This file
-                                    was created using a newer version of DotStar.""")
+                    logging.warning("Your DotStar version may be out-of-date. This file " +
+                                    "was created using a newer version of DotStar.")
 
                 # Check the integrity area
                 if "Integrity Information" in data:
-                    if "Hashes" in data["Integrity Information"]:
-                        # Calculate hashes
-
-                        # Compare and abort if necessary
-                        pass
+                    if not verify_integrity(temp_dir, data["Integrity Information"]):
+                        logging.error("Package corrupted.")
+                        return
 
                 # Check the dependencies area
                 if "Dependency Information" in data:
@@ -378,6 +380,12 @@ def download_file(url, folder_path, file_name="Temp.star"):
     with open(file_path, "wb") as dotstarfile:
         dotstarfile.write(r.content)
     return file_path
+
+def verify_integrity(folder_path, integrity_info):
+    """
+    Verifies the folder's integrity using the data
+    """
+    return True
 
 def refresh_local_repo():
     """

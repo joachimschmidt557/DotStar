@@ -65,5 +65,5 @@ jobs:
             python DotStar/DotStar.py -y DotStar/Package.yml
 
       - store_artifacts:
-          path: build
-          destination: build
+          path: dotstar.star
+          destination: dotstar.star

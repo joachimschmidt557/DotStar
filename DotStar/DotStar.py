@@ -324,12 +324,23 @@ def compile_file(file_path):
         temp_dir = get_temporary_directory(create_directory=False)
         output_file = ""
 
-        # Copy the necessary files into the folder
-        shutil.copytree(os.path.dirname(file_path), temp_dir)
-
         # Read the file
         with open(file_path) as compilation_info_yaml:
             other_data = yaml.load(compilation_info_yaml)
+
+        # Extract compilation information
+        ignored_list = []
+        if "Compilation Information" in other_data:
+            # Get the list of files/folders to be ignored
+            if "Ignore files" in other_data["Compilation Information"]:
+                ignored_list = other_data["Compilation Information"]["Ignore files"]
+
+            # Clean up the compilation information area
+            other_data.pop("Compilation Information")
+
+        # Copy the necessary files into the folder
+        shutil.copytree(os.path.dirname(file_path), temp_dir,
+                        ignore=shutil.ignore_patterns(*ignored_list))
 
         # Get the output file name
         output_file = os.path.join(os.getcwd(), other_data["Application Information"]["Name"] + ".star")
@@ -386,7 +397,7 @@ def compress_folder(folder_path, zipfile_path):
     # If the file already exists, delete it to prevent an error
     if os.path.exists(zipfile_path):
         os.remove(zipfile_path)
-        
+
     # Remove the .zip part of the file name
     os.rename(zipfile_path + ".zip", zipfile_path)
 

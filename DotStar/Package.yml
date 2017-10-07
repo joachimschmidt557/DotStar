@@ -1,5 +1,8 @@
 Basic Package Information:
   Name: dotstar
+Compilation Information:
+    Ignore files:
+        - .git*
 Author information:
   Name: joachimschmidt557
   Company: ''

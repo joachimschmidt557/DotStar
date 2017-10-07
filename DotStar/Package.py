@@ -16,6 +16,7 @@ Possible command-line arguments are:
 
 import sys
 import os
+import shutil
 
 def install_package():
     """
@@ -23,12 +24,16 @@ def install_package():
     installing the package
     """
     print("Installing DotStar...")
+    dest_dir = ""
+    shutil.copytree(os.path.dirname(os.path.abspath(__file__)),
+                    dest_dir)
 
 def run_package():
     """
     Run DotStar
     """
-    print("Running DotStar...")
+    print("Running DotStar from the package is not possible.")
+    print("Please install DotStar first using dotstar -i dotstar")
 
 def compile_package():
     """

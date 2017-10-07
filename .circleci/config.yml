@@ -62,7 +62,7 @@ jobs:
           name: Compile
           command: |
             . venv/bin/activate
-            python DotStar/DotStar.py -y DotStar/Compile.star
+            python DotStar/DotStar.py -y DotStar/Package.yml
 
       - store_artifacts:
           path: build

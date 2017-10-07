@@ -11,6 +11,7 @@ import zipfile
 import zlib
 import logging
 import shutil
+import struct
 import platform
 import subprocess
 from distutils.version import StrictVersion
@@ -74,7 +75,9 @@ def load_settings(settings_file=SETTINGS_FILE):
     try:
         with open(settings_file) as settings_yaml:
             settings = yaml.load(settings_yaml)
-    except:
+    except yaml.YAMLError:
+        settings = DEFAULT_SETTINGS
+    except FileNotFoundError:
         settings = DEFAULT_SETTINGS
 
 def save_settings():
@@ -88,6 +91,31 @@ def save_settings():
             yaml.dump(settings, settings_yaml)
     except:
         logging.error("Couldn't update settings")
+
+def get_current_platform():
+    """
+    Returns the current platform DotStar is
+    running on
+    """
+    bitness = get_current_bitness()
+    simple_name = platform.system()
+    #version = platform.version()
+    if simple_name == "Windows":
+        if bitness == 32:
+            return "Win32"
+        if bitness == 64:
+            return "Win64"
+    elif simple_name == "Linux":
+        return "Linux"
+    elif simple_name == "Darwin":
+        return "macOS"
+
+def get_current_bitness():
+    """
+    Returns '32' or '64' according to the OS'
+    and python's bitness
+    """
+    return 8 * struct.calcsize("P")
 
 def user_consent(message):
     """
@@ -208,8 +236,12 @@ def open_local_file(file_path, action='0'):
                 if "Application Information" in data:
                     # Type: Application package
                     info = data["Application Information"]
-                    #resources = info["Resources"]
-                    #commands = info["Commands"]
+
+                    # Check the platform area
+                    if "Supported Platforms" in info:
+                        if get_current_platform() not in info["Supported Platforms"]:
+                            logging.critical("This app is currently not supported on this platform")
+                            return
 
                     # Check our specified action
                     if action == 'r':
@@ -257,8 +289,8 @@ def open_local_file(file_path, action='0'):
                 else:
                     # Empty file
                     logging.warning("This file is an empty file.")
-        except FileNotFoundError:
-            raise FileNotFoundError
+        except FileNotFoundError as err:
+            raise err
         except yaml.YAMLError:
             logging.critical("Error decoding YAML")
 
@@ -268,7 +300,7 @@ def open_local_file(file_path, action='0'):
     except zipfile.BadZipFile:
         logging.critical("Bad zip file!")
     except FileNotFoundError:
-        logging.critical("File doesn't exist!")
+        logging.critical("File doesn't exist! " + str(err))
 
 def open_local_file_partially(file_path, file_name=PACKAGE_INFO_FILE):
     """
@@ -350,6 +382,12 @@ def compress_folder(folder_path, zipfile_path):
     Compress a folder into a file (no adding of .zip extension)
     """
     shutil.make_archive(zipfile_path, "zip", folder_path)
+
+    # If the file already exists, delete it to prevent an error
+    if os.path.exists(zipfile_path):
+        os.remove(zipfile_path)
+        
+    # Remove the .zip part of the file name
     os.rename(zipfile_path + ".zip", zipfile_path)
 
 def is_url(path):

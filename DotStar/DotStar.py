@@ -323,9 +323,9 @@ def compile_file(file_path):
         script_file = os.path.join(temp_dir, PACKAGE_FILE)
         if user_consent("Run compilation script? (y/n): "):
             if sys.version_info < (3, 5):
-                subprocess.call("python " + script_file + " compile", cwd=temp_dir)
+                subprocess.call(sys.executable + " " + script_file + " compile", cwd=temp_dir)
             else:
-                subprocess.run("python " + script_file + " compile", cwd=temp_dir)
+                subprocess.run(sys.executable + " " + script_file + " compile", cwd=temp_dir)
 
         # Zip the folder
         compress_folder(temp_dir, output_file)

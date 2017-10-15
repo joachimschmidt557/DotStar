@@ -557,7 +557,6 @@ def unlock_locked_file(file_name):
     settings["Locked files"].remove(file_name)
     logging.info(file_name + " successfully unlocked.")
 
-
 def is_locked(file_name):
     """
     Returns whether file_name is locked or not

@@ -28,6 +28,13 @@ def install_package():
     shutil.copytree(os.path.dirname(os.path.abspath(__file__)),
                     dest_dir)
 
+def add_to_windows_path():
+    old_path = os.environ['PATH']
+    try:
+        os.environ['PATH'] = "{}{}{}".format('/my/new/path', os.pathsep, old_path)
+    finally:
+        os.environ['PATH'] = old_path
+
 def run_package():
     """
     Run DotStar
@@ -40,8 +47,8 @@ def compile_package():
     Compile DotStar
     """
     print("Compiling DotStar...")
-    os.system("pyinstaller DotStar.py")
-    os.system("%PYTHON%\\Scripts\\pyinstaller.exe DotStar.py")
+    os.system("pyinstaller -F DotStar.py")
+    os.system("%PYTHON%\\Scripts\\pyinstaller.exe -F DotStar.py")
     print("Creating Windows binaries")
     #os.system("%PYTHON%\\python.exe -m py2exe.build_exe DotStar.py")
     print("Creating Linux binaries")

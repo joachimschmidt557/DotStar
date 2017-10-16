@@ -226,7 +226,7 @@ def open_local_file(file_path, action='0'):
         package_file_linux_install = os.path.join(temp_dir, PACKAGE_FILE_LINUX_INSTALL)
         package_file_linux_uninstall = os.path.join(temp_dir, PACKAGE_FILE_LINUX_UNINSTALL)
         package_file_linux_run = os.path.join(temp_dir, PACKAGE_FILE_LINUX_RUN)
-        package_file_linux_compile = os.path.join(temp_dir, PACKAGE_FILE_LINUX__COMPILE)
+        package_file_linux_compile = os.path.join(temp_dir, PACKAGE_FILE_LINUX_COMPILE)
         try:
             with open(package_info_file) as package_info_yaml:
                 data = yaml.load(package_info_yaml)

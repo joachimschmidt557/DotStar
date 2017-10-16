@@ -26,6 +26,7 @@ __version__ = "0.1"
 
 # CONSTANTS
 PACKAGE_INFO_FILE = "Package.yml"
+
 PACKAGE_FILE = "Package.py"
 PACKAGE_FILE_WIN = "Package.Win.bat"
 PACKAGE_FILE_WIN_INSTALL = "Package.Win.Install.bat"
@@ -33,6 +34,7 @@ PACKAGE_FILE_WIN_UNINSTALL = "Package.Win.Uninstall.bat"
 PACKAGE_FILE_LINUX = "Package.Linux.sh"
 PACKAGE_FILE_LINUX_INSTALL = "Package.Linux.Install.sh"
 PACKAGE_FILE_LINUX_UNINSTALL = "Package.Linux.Uninstall.sh"
+
 SETTINGS_FILE = "DotStarSettings.star"
 FILE_CACHE_DIRECTORY = "Packages"
 INSTALLED_FILES_DIRECTORY = "Installed"

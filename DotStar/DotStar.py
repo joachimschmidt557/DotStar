@@ -31,9 +31,13 @@ PACKAGE_FILE = "Package.py"
 PACKAGE_FILE_WIN = "Package.Win.bat"
 PACKAGE_FILE_WIN_INSTALL = "Package.Win.Install.bat"
 PACKAGE_FILE_WIN_UNINSTALL = "Package.Win.Uninstall.bat"
+PACKAGE_FILE_WIN_RUN = "Package.Win.Run.bat"
+PACKAGE_FILE_WIN_COMPILE = "Package.Win.Compile.bat"
 PACKAGE_FILE_LINUX = "Package.Linux.sh"
 PACKAGE_FILE_LINUX_INSTALL = "Package.Linux.Install.sh"
 PACKAGE_FILE_LINUX_UNINSTALL = "Package.Linux.Uninstall.sh"
+PACKAGE_FILE_LINUX_RUN = "Package.Linux.Run.sh"
+PACKAGE_FILE_LINUX_COMPILE = "Package.Linux.Compile.sh"
 
 SETTINGS_FILE = "DotStarSettings.star"
 FILE_CACHE_DIRECTORY = "Packages"
@@ -277,7 +281,7 @@ def open_local_file(file_path, action='0'):
                     if get_current_platform() == "Win32" or get_current_platform() == "Win64":
                         if os.path.exists(package_file_win_install):
                             if user_consent("Run additional installation steps? (y/n): "):
-                                os.system("cmd /C " + package_file_win_install)
+                                subprocess.call([package_file_win_install], cwd=temp_dir)
                         elif os.path.exists(package_file_win):
                             pass
                         elif os.path.exists(package_file):
@@ -286,7 +290,7 @@ def open_local_file(file_path, action='0'):
                     elif get_current_platform() == "Linux":
                         if os.path.exists(package_file_linux_install):
                             if user_consent("Run additional installation steps? (y/n): "):
-                                os.system("bash " + package_file_linux_install)
+                                subprocess.call([package_file_linux_install], cwd=temp_dir)
                         elif os.path.exists(package_file_linux):
                             pass
                         elif os.path.exists(package_file):
@@ -300,7 +304,7 @@ def open_local_file(file_path, action='0'):
                     if get_current_platform() == "Win32" or get_current_platform() == "Win64":
                         if os.path.exists(package_file_win_uninstall):
                             if user_consent("Run additional uninstallation steps? (y/n): "):
-                                os.system("cmd /C " + package_file_win_uninstall)
+                                subprocess.call([package_file_win_uninstall], cwd=temp_dir)
                         elif os.path.exists(package_file_win):
                             pass
                         elif os.path.exists(package_file):
@@ -309,7 +313,7 @@ def open_local_file(file_path, action='0'):
                     elif get_current_platform() == "Linux":
                         if os.path.exists(package_file_linux_uninstall):
                             if user_consent("Run additional uninstallation steps? (y/n): "):
-                                os.system("bash " + package_file_linux_uninstall)
+                                subprocess.call([package_file_linux_uninstall], cwd=temp_dir)
                         elif os.path.exists(package_file_linux):
                             pass
                         elif os.path.exists(package_file):

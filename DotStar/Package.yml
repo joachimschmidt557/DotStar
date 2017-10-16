@@ -3,6 +3,9 @@ Basic Package Information:
 Compilation Information:
     Ignore files:
         - .git*
+        - installer.cfg
+        - installer.nsi
+        - build*
 Author information:
   Name: joachimschmidt557
   Company: ''

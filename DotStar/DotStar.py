@@ -220,9 +220,13 @@ def open_local_file(file_path, action='0'):
         package_file_win = os.path.join(temp_dir, PACKAGE_FILE_WIN)
         package_file_win_install = os.path.join(temp_dir, PACKAGE_FILE_WIN_INSTALL)
         package_file_win_uninstall = os.path.join(temp_dir, PACKAGE_FILE_WIN_UNINSTALL)
+        package_file_win_run = os.path.join(temp_dir, PACKAGE_FILE_WIN_RUN)
+        package_file_win_compile = os.path.join(temp_dir, PACKAGE_FILE_WIN_COMPILE)
         package_file_linux = os.path.join(temp_dir, PACKAGE_FILE_LINUX)
         package_file_linux_install = os.path.join(temp_dir, PACKAGE_FILE_LINUX_INSTALL)
         package_file_linux_uninstall = os.path.join(temp_dir, PACKAGE_FILE_LINUX_UNINSTALL)
+        package_file_linux_run = os.path.join(temp_dir, PACKAGE_FILE_LINUX_RUN)
+        package_file_linux_compile = os.path.join(temp_dir, PACKAGE_FILE_LINUX__COMPILE)
         try:
             with open(package_info_file) as package_info_yaml:
                 data = yaml.load(package_info_yaml)
@@ -265,7 +269,21 @@ def open_local_file(file_path, action='0'):
                 if action == 'r':
                     # Run the app
                     if user_consent("Run the File? (y/n): "):
-                        subprocess.call([sys.executable, package_file, "run"], cwd=temp_dir)
+                        # Select appropiate script, depending on platform
+                        if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+                            if os.path.exists(package_file_win_run):
+                                subprocess.call([package_file_win_run], cwd=temp_dir)
+                            elif os.path.exists(package_file_win):
+                                pass
+                            elif os.path.exists(package_file):
+                                os.system("python " + package_file + " run")
+                        elif get_current_platform() == "Linux":
+                            if os.path.exists(package_file_linux_run):
+                                subprocess.call([package_file_linux_run], cwd=temp_dir)
+                            elif os.path.exists(package_file_linux):
+                                pass
+                            elif os.path.exists(package_file):
+                                os.system("python " + package_file + " run")
                 elif action == 'i':
                     # Install the app
                     # Copy the package to the installation directory

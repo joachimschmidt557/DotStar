@@ -275,7 +275,7 @@ def open_local_file(file_path, action='0'):
                     if get_current_platform() == "Win32" or get_current_platform() == "Win64":
                         if os.path.exists(package_file_win_install):
                             if user_consent("Run additional installation steps? (y/n): "):
-                                os.system("cmd /K " + package_file_win_install)
+                                os.system("cmd /C " + package_file_win_install)
                         elif os.path.exists(package_file_win):
                             pass
                         elif os.path.exists(package_file):
@@ -298,7 +298,7 @@ def open_local_file(file_path, action='0'):
                     if get_current_platform() == "Win32" or get_current_platform() == "Win64":
                         if os.path.exists(package_file_win_uninstall):
                             if user_consent("Run additional uninstallation steps? (y/n): "):
-                                os.system("cmd /K " + package_file_win_uninstall)
+                                os.system("cmd /C " + package_file_win_uninstall)
                         elif os.path.exists(package_file_win):
                             pass
                         elif os.path.exists(package_file):

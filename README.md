@@ -11,7 +11,7 @@ can be run on your PC? Ever felt the urge to send a `FileName.*` file?
 
 DotStar makes this possible by providing an open container format architecture.
 It's structure is easy and completely transparent: `.star` files are just normal
-ZIP-compressed files which include one `Package.json` file which explains the
+ZIP-compressed files which include one `Package.yml` file which explains the
 whole content. 
 
 ## Package-management capability

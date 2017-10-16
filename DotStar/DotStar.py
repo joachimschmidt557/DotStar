@@ -271,13 +271,48 @@ def open_local_file(file_path, action='0'):
                     os.rename(installed_file_path, os.path.join(installation_dir, new_file_name))
 
                     # Additional installation steps
-                    if user_consent("Run the python script for additional installation steps? (y/n): "):
-                        os.system("python " + package_file + " install")
+                    # Select appropiate script, depending on platform
+                    if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+                        if os.path.exists(package_file_win_install):
+                            if user_consent("Run additional installation steps? (y/n): "):
+                                os.system("cmd /K " + package_file_win_install)
+                        elif os.path.exists(package_file_win):
+                            pass
+                        elif os.path.exists(package_file):
+                            if user_consent("Run additional installation steps? (y/n): "):
+                                os.system("python " + package_file + " install")
+                    elif get_current_platform() == "Linux":
+                        if os.path.exists(package_file_linux_install):
+                            if user_consent("Run additional installation steps? (y/n): "):
+                                os.system("bash " + package_file_linux_install)
+                        elif os.path.exists(package_file_linux):
+                            pass
+                        elif os.path.exists(package_file):
+                            if user_consent("Run installation steps? (y/n): "):
+                                os.system("python " + package_file + " install")
+
                     logging.info("Installation successful")
                 elif action == 'u':
                     # Additional uninstallation steps
-                    if user_consent("Run the python script for additional uninstalltion steps? (y/n): "):
-                        os.system("python " + package_file + " uninstall")
+                    # Select appropiate script, depending on platform
+                    if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+                        if os.path.exists(package_file_win_uninstall):
+                            if user_consent("Run additional uninstallation steps? (y/n): "):
+                                os.system("cmd /K " + package_file_win_uninstall)
+                        elif os.path.exists(package_file_win):
+                            pass
+                        elif os.path.exists(package_file):
+                            if user_consent("Run additional uninstallation steps? (y/n): "):
+                                os.system("python " + package_file + " uninstall")
+                    elif get_current_platform() == "Linux":
+                        if os.path.exists(package_file_linux_uninstall):
+                            if user_consent("Run additional uninstallation steps? (y/n): "):
+                                os.system("bash " + package_file_linux_uninstall)
+                        elif os.path.exists(package_file_linux):
+                            pass
+                        elif os.path.exists(package_file):
+                            if user_consent("Run uninstallation steps? (y/n): "):
+                                os.system("python " + package_file + " uninstall")
 
                     # Delete the file
                     os.remove(file_path)

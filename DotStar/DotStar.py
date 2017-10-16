@@ -27,6 +27,12 @@ __version__ = "0.1"
 # CONSTANTS
 PACKAGE_INFO_FILE = "Package.yml"
 PACKAGE_FILE = "Package.py"
+PACKAGE_FILE_WIN = "Package.Win.bat"
+PACKAGE_FILE_WIN_INSTALL = "Package.Win.Install.bat"
+PACKAGE_FILE_WIN_UNINSTALL = "Package.Win.Uninstall.bat"
+PACKAGE_FILE_LINUX = "Package.Linux.sh"
+PACKAGE_FILE_LINUX_INSTALL = "Package.Linux.Install.sh"
+PACKAGE_FILE_LINUX_UNINSTALL = "Package.Linux.Uninstall.sh"
 SETTINGS_FILE = "DotStarSettings.star"
 FILE_CACHE_DIRECTORY = "Packages"
 INSTALLED_FILES_DIRECTORY = "Installed"
@@ -205,90 +211,96 @@ def open_local_file(file_path, action='0'):
         # Process file
         package_info_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
         package_file = os.path.join(temp_dir, PACKAGE_FILE)
+        package_file_win = os.path.join(temp_dir, PACKAGE_FILE_WIN)
+        package_file_win_install = os.path.join(temp_dir, PACKAGE_FILE_WIN_INSTALL)
+        package_file_win_uninstall = os.path.join(temp_dir, PACKAGE_FILE_WIN_UNINSTALL)
+        package_file_linux = os.path.join(temp_dir, PACKAGE_FILE_LINUX)
+        package_file_linux_install = os.path.join(temp_dir, PACKAGE_FILE_LINUX_INSTALL)
+        package_file_linux_uninstall = os.path.join(temp_dir, PACKAGE_FILE_LINUX_UNINSTALL)
         try:
             with open(package_info_file) as package_info_yaml:
                 data = yaml.load(package_info_yaml)
 
-                # Check the "DotStar Information area"
-                version_used_to_compile = StrictVersion(data["DotStar Information"]["Version"])
-                if CURRENT_VERSION < version_used_to_compile:
-                    # This file was created with a newer version of DotStar
-                    # So, this version may be out-of-date
-                    logging.warning("Your DotStar version may be out-of-date. This file " +
-                                    "was created using a newer version of DotStar.")
+            # Check the "DotStar Information area"
+            version_used_to_compile = StrictVersion(data["DotStar Information"]["Version"])
+            if CURRENT_VERSION < version_used_to_compile:
+                # This file was created with a newer version of DotStar
+                # So, this version may be out-of-date
+                logging.warning("Your DotStar version may be out-of-date. This file " +
+                                "was created using a newer version of DotStar.")
 
-                # Check the integrity area
-                if "Integrity Information" in data:
-                    if not verify_integrity(temp_dir, data["Integrity Information"]):
-                        logging.error("Package corrupted.")
-                        return
+            # Check the integrity area
+            if "Integrity Information" in data:
+                if not verify_integrity(temp_dir, data["Integrity Information"]):
+                    logging.error("Package corrupted.")
+                    return
 
-                # Check the dependencies area
-                if "Dependency Information" in data:
-                    for dependency in data["Dependencies"]:
-                        logging.debug("This file depends on " + dependency["Name"])
-                        # Check if the dependecy is installed
-
+            # Check the dependencies area
+            if "Dependency Information" in data:
+                for dependency in data["Dependencies"]:
+                    logging.debug("This file depends on " + dependency["Name"])
+                    # Check if the dependecy is installed
+                    if not is_installed(dependency["Name"]):
                         # Install dependency
                         open_local_file(dependency["File"], action='i')
 
-                # Check the type
-                if "Application Information" in data:
-                    # Type: Application package
-                    info = data["Application Information"]
+            # Check the type
+            if "Application Information" in data:
+                # Type: Application package
+                info = data["Application Information"]
 
-                    # Check the platform area
-                    if "Supported Platforms" in info:
-                        if get_current_platform() not in info["Supported Platforms"]:
-                            logging.critical("This app is currently not supported on this platform")
-                            return
+                # Check the platform area
+                if "Supported Platforms" in info:
+                    if get_current_platform() not in info["Supported Platforms"]:
+                        logging.critical("This app is currently not supported on this platform")
+                        return
 
-                    # Check our specified action
-                    if action == 'r':
-                        # Run the app
-                        if user_consent("Run the File? (y/n): "):
-                            os.system("python " + package_file + " run")
-                    elif action == 'i':
-                        # Install the app
-                        # Copy the package to the installation directory
-                        installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
-                        new_file_name = info["Name"] + ".star"
-                        if not os.path.exists(installation_dir):
-                            os.makedirs(installation_dir)
-                        installed_file_path = shutil.copy(file_path, installation_dir)
-                        os.rename(installed_file_path, os.path.join(installation_dir, new_file_name))
+                # Check our specified action
+                if action == 'r':
+                    # Run the app
+                    if user_consent("Run the File? (y/n): "):
+                        os.system("python " + package_file + " run")
+                elif action == 'i':
+                    # Install the app
+                    # Copy the package to the installation directory
+                    installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
+                    new_file_name = info["Name"] + ".star"
+                    if not os.path.exists(installation_dir):
+                        os.makedirs(installation_dir)
+                    installed_file_path = shutil.copy(file_path, installation_dir)
+                    os.rename(installed_file_path, os.path.join(installation_dir, new_file_name))
 
-                        # Additional installation steps
-                        if user_consent("Run the python script for additional installation steps? (y/n): "):
-                            os.system("python " + package_file + " install")
-                        logging.info("Installation successful")
-                    elif action == 'u':
-                        # Additional uninstallation steps
-                        if user_consent("Run the python script for additional uninstalltion steps? (y/n): "):
-                            os.system("python " + package_file + " uninstall")
+                    # Additional installation steps
+                    if user_consent("Run the python script for additional installation steps? (y/n): "):
+                        os.system("python " + package_file + " install")
+                    logging.info("Installation successful")
+                elif action == 'u':
+                    # Additional uninstallation steps
+                    if user_consent("Run the python script for additional uninstalltion steps? (y/n): "):
+                        os.system("python " + package_file + " uninstall")
 
-                        # Delete the file
-                        os.remove(file_path)
-                        logging.info("Removed file " + file_path)
-                    else:
-                        # If no action is specified, let the user decide
-                        print(info["Friendly Name"])
-                        print("Version " + info["Version"])
-                        print(info["Description"])
-                        print("Possible actions: ")
-
-                #elif "Document Information" in data:
-                #    # Type: Document package
-                #    info = data["Document Information"]
-                #    resources = info["Resources"]
-                #    for resource in resources:
-                #        pass
-                #elif "Folder Information" in data:
-                #    # Type: Folder package
-                #    pass
+                    # Delete the file
+                    os.remove(file_path)
+                    logging.info("Removed file " + file_path)
                 else:
-                    # Empty file
-                    logging.warning("This file is an empty file.")
+                    # If no action is specified, let the user decide
+                    print(info["Friendly Name"])
+                    print("Version " + info["Version"])
+                    print(info["Description"])
+                    print("Possible actions: ")
+
+            #elif "Document Information" in data:
+            #    # Type: Document package
+            #    info = data["Document Information"]
+            #    resources = info["Resources"]
+            #    for resource in resources:
+            #        pass
+            #elif "Folder Information" in data:
+            #    # Type: Folder package
+            #    pass
+            else:
+                # Empty file
+                logging.warning("This file is an empty file.")
         except FileNotFoundError as err:
             raise err
         except yaml.YAMLError:
@@ -523,7 +535,8 @@ def list_installed_files():
 
 def is_installed(file_name):
     """
-    Returns whether file_name is installed or not
+    Returns whether file_name is installed or not.
+    (file_name without ".star")
     """
     if len(search_installed_files(file_name)) == 1:
         return True
@@ -575,7 +588,7 @@ def list_outdated_files():
 def search_installed_files(file_name):
     """
     Searches the installed .star files for matching
-    files
+    files (file_name without ".star")
     """
     all_installed_files = list_installed_files()
     file_name_with_extension = file_name + ".star"

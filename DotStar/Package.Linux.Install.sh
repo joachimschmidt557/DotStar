@@ -2,5 +2,5 @@
 
 # This script will install DotStar
 
-mkdir ~/bin/
+mkdir -p ~/bin/
 cp ./dist/DotStar ~/bin/

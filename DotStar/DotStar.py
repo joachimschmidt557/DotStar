@@ -322,7 +322,7 @@ def open_local_file(file_path, action='0'):
                     if get_current_platform() == "Win32" or get_current_platform() == "Win64":
                         if os.path.exists(package_file_win_uninstall):
                             if user_consent("Run additional uninstallation steps? (y/n): "):
-                                subprocess.call([package_file_win_uninstall], cwd=temp_dir)
+                                subprocess.call(["bash", package_file_win_uninstall], cwd=temp_dir)
                         elif os.path.exists(package_file_win):
                             pass
                         elif os.path.exists(package_file):
@@ -331,7 +331,7 @@ def open_local_file(file_path, action='0'):
                     elif get_current_platform() == "Linux":
                         if os.path.exists(package_file_linux_uninstall):
                             if user_consent("Run additional uninstallation steps? (y/n): "):
-                                subprocess.call([package_file_linux_uninstall], cwd=temp_dir)
+                                subprocess.call(["bash", package_file_linux_uninstall], cwd=temp_dir)
                         elif os.path.exists(package_file_linux):
                             pass
                         elif os.path.exists(package_file):

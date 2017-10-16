@@ -34,9 +34,21 @@ For a starting point, clone or download
 
 ## Installation
 
+### Windows
+
 If you don't have DotStar installed, just run this command in PowerShell:
 
 `(New-Object System.Net.WebClient).DownloadFile("URL", "dotstar.exe"); & Start-Process ".\dotstar.exe refresh" -NoNewWindow -Wait; & Start-Process ".\dotstar.exe -i dotstar" -NoNewWindow -Wait; & Remove-Item .\dotstar.exe`
+
+### Linux
+
+*Coming soon*
+
+### macOS
+
+*Coming soon*
+
+### Upgrading DotStar
 
 If you already have DotStar installed, upgrade it by using this command:
 

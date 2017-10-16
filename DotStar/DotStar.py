@@ -261,7 +261,7 @@ def open_local_file(file_path, action='0'):
                 if action == 'r':
                     # Run the app
                     if user_consent("Run the File? (y/n): "):
-                        os.system("python " + package_file + " run")
+                        subprocess.call([sys.executable, package_file, "run"], cwd=temp_dir)
                 elif action == 'i':
                     # Install the app
                     # Copy the package to the installation directory
@@ -365,7 +365,7 @@ def open_local_file_partially(file_path, file_name=PACKAGE_INFO_FILE):
 
 def compile_file(file_path):
     """
-    Compile the specified .star file with all it's resources into a new .star file
+    Compile the specified file with all it's resources into a new .star file
     """
     logging.info("Attempting to compile " + file_path)
     try:

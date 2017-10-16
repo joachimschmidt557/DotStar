@@ -279,7 +279,7 @@ def open_local_file(file_path, action='0'):
                                 os.system("python " + package_file + " run")
                         elif get_current_platform() == "Linux":
                             if os.path.exists(package_file_linux_run):
-                                subprocess.call([package_file_linux_run], cwd=temp_dir)
+                                subprocess.call(["bash", package_file_linux_run], cwd=temp_dir)
                             elif os.path.exists(package_file_linux):
                                 pass
                             elif os.path.exists(package_file):
@@ -308,7 +308,7 @@ def open_local_file(file_path, action='0'):
                     elif get_current_platform() == "Linux":
                         if os.path.exists(package_file_linux_install):
                             if user_consent("Run additional installation steps? (y/n): "):
-                                subprocess.call([package_file_linux_install], cwd=temp_dir)
+                                subprocess.call(["bash", package_file_linux_install], cwd=temp_dir)
                         elif os.path.exists(package_file_linux):
                             pass
                         elif os.path.exists(package_file):

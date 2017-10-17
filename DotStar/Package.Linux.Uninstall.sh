@@ -1,3 +1,3 @@
 #!/bin/bash
-# This script will install DotStar
+# This script will uninstall DotStar
 rm usr/bin/DotStar

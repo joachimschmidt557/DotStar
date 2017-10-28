@@ -221,12 +221,10 @@ def open_local_file(file_path, action='0'):
         package_file_win_install = os.path.join(temp_dir, PACKAGE_FILE_WIN_INSTALL)
         package_file_win_uninstall = os.path.join(temp_dir, PACKAGE_FILE_WIN_UNINSTALL)
         package_file_win_run = os.path.join(temp_dir, PACKAGE_FILE_WIN_RUN)
-        package_file_win_compile = os.path.join(temp_dir, PACKAGE_FILE_WIN_COMPILE)
         package_file_linux = os.path.join(temp_dir, PACKAGE_FILE_LINUX)
         package_file_linux_install = os.path.join(temp_dir, PACKAGE_FILE_LINUX_INSTALL)
         package_file_linux_uninstall = os.path.join(temp_dir, PACKAGE_FILE_LINUX_UNINSTALL)
         package_file_linux_run = os.path.join(temp_dir, PACKAGE_FILE_LINUX_RUN)
-        package_file_linux_compile = os.path.join(temp_dir, PACKAGE_FILE_LINUX_COMPILE)
         try:
             with open(package_info_file) as package_info_yaml:
                 data = yaml.load(package_info_yaml)
@@ -394,6 +392,8 @@ def compile_file(file_path):
         # Create temporary folder to store the files into
         temp_dir = get_temporary_directory(create_directory=False)
         output_file = ""
+        package_file_win_compile = os.path.join(temp_dir, PACKAGE_FILE_WIN_COMPILE)
+        package_file_linux_compile = os.path.join(temp_dir, PACKAGE_FILE_LINUX_COMPILE)
 
         # Read the file
         with open(file_path) as compilation_info_yaml:
@@ -436,10 +436,21 @@ def compile_file(file_path):
         # Run the python script for additional compilation steps
         script_file = os.path.join(temp_dir, PACKAGE_FILE)
         if user_consent("Run compilation script? (y/n): "):
-            if sys.version_info < (3, 5):
-                subprocess.call([sys.executable, script_file, "compile"], cwd=temp_dir)
-            else:
-                subprocess.run([sys.executable, script_file, "compile"], cwd=temp_dir)
+            # Select appropiate script, depending on platform
+            if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+                if os.path.exists(package_file_win_compile):
+                    subprocess.call([package_file_win_compile], cwd=temp_dir)
+                #elif os.path.exists(package_file_win):
+                #    pass
+                elif os.path.exists(script_file):
+                    os.system("python " + script_file + " run")
+            elif get_current_platform() == "Linux":
+                if os.path.exists(package_file_linux_compile):
+                    subprocess.call(["bash", package_file_linux_compile], cwd=temp_dir)
+                #elif os.path.exists(package_file_linux):
+                #    pass
+                elif os.path.exists(script_file):
+                    os.system("python " + script_file + " run")
 
         # Zip the folder
         compress_folder(temp_dir, output_file)

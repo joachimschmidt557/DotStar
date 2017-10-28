@@ -42,24 +42,8 @@ def run_package():
     print("Running DotStar from the package is not possible.")
     print("Please install DotStar first using dotstar -i dotstar")
 
-def compile_package():
-    """
-    Compile DotStar
-    """
-    print("Compiling DotStar...")
-    os.system("pyinstaller -F DotStar.py")
-    os.system("%PYTHON%\\Scripts\\pyinstaller.exe -F DotStar.py")
-    print("Creating Windows binaries")
-    #os.system("%PYTHON%\\python.exe -m py2exe.build_exe DotStar.py")
-    print("Creating Linux binaries")
-    print("Creating macOS binaries")
-    print("Creating installers")
-    print("Finished compiling DotStar")
-
 action = sys.argv[1]
 if action == "install":
     install_package()
 elif action == "run":
     run_package()
-elif action == "compile":
-    compile_package()

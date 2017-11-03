@@ -2,4 +2,4 @@
 rem This script will install DotStar on the machine
 
 mkdir %LOCALAPPDATA%\DotStar
-copy .\dist\DotStar.exe %LOCALAPPDATA%\DotStar\ /Y
+copy .\dist\dotstar.exe %LOCALAPPDATA%\DotStar\ /Y

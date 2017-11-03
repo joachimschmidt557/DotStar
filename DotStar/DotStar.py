@@ -41,8 +41,8 @@ PACKAGE_FILE_LINUX_COMPILE = "Package.Linux.Compile.sh"
 
 WORKING_DIRECTORY = os.path.realpath(__file__)
 SETTINGS_FILE = "DotStarSettings.star"
-FILE_CACHE_DIRECTORY = "Packages"
-INSTALLED_FILES_DIRECTORY = "Installed"
+FILE_CACHE_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Packages")
+INSTALLED_FILES_DIRECTORY = os.path.join(FILE_CACHE_DIRECTORY, "Installed")
 REPO_DIRECTORY = "Repositories"
 
 CURRENT_PLATFORM = sys.platform
@@ -170,8 +170,7 @@ def open_file(path, action='0'):
                 if action == 'i':
                     # The package should be reinstalled
                     action = 'I'
-                local_file_path = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY,
-                                               path + ".star")
+                local_file_path = os.path.join(INSTALLED_FILES_DIRECTORY, path + ".star")
             else:
                 logging.error(path + " is locked. To manipulate this file, unlock it first.")
                 return
@@ -285,7 +284,7 @@ def open_local_file(file_path, action='0'):
                 elif action == 'i':
                     # Install the app
                     # Copy the package to the installation directory
-                    installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
+                    installation_dir = INSTALLED_FILES_DIRECTORY
                     new_file_name = info["Name"] + ".star"
                     if not os.path.exists(installation_dir):
                         os.makedirs(installation_dir)
@@ -596,7 +595,7 @@ def list_installed_files():
     Returns a list with filenames (absoulte path) of
     installed files
     """
-    installation_dir = os.path.join(FILE_CACHE_DIRECTORY, INSTALLED_FILES_DIRECTORY)
+    installation_dir = INSTALLED_FILES_DIRECTORY
     if not os.path.exists(installation_dir):
         os.makedirs(installation_dir)
         return []

@@ -1,1 +1,1 @@
-pyinstaller -F DotStar.py
+pyinstaller -F DotStar.py -n dotstar

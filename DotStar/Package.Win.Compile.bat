@@ -1,1 +1,1 @@
-%PYTHON%\\Scripts\\pyinstaller.exe -F DotStar.py
+%PYTHON%\\Scripts\\pyinstaller.exe -F DotStar.py -n dotstar

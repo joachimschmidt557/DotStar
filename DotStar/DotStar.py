@@ -45,7 +45,6 @@ FILE_CACHE_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Packages")
 INSTALLED_FILES_DIRECTORY = os.path.join(FILE_CACHE_DIRECTORY, "Installed")
 REPO_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Repositories")
 
-CURRENT_PLATFORM = sys.platform
 CURRENT_VERSION = StrictVersion(__version__)
 ACTIONS = [
     'r',    # Run the package
@@ -79,7 +78,7 @@ DEFAULT_SETTINGS = {
 settings = None
 yes_to_all = False
 
-def load_settings(settings_file=os.path.join(WORKING_DIRECTORY,SETTINGS_FILE)):
+def load_settings(settings_file=os.path.join(WORKING_DIRECTORY, SETTINGS_FILE)):
     """
     Loads the user-defined settings. If these don't
     exist, loads the default settings.
@@ -93,7 +92,7 @@ def load_settings(settings_file=os.path.join(WORKING_DIRECTORY,SETTINGS_FILE)):
     except FileNotFoundError:
         settings = DEFAULT_SETTINGS
 
-def save_settings(settings_file=os.path.join(WORKING_DIRECTORY,SETTINGS_FILE)):
+def save_settings(settings_file=os.path.join(WORKING_DIRECTORY, SETTINGS_FILE)):
     """
     Save the settings into the Settings file.
     """

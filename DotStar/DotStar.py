@@ -79,7 +79,7 @@ DEFAULT_SETTINGS = {
 settings = None
 yes_to_all = False
 
-def load_settings(settings_file=SETTINGS_FILE):
+def load_settings(settings_file=os.path.join(WORKING_DIRECTORY,SETTINGS_FILE)):
     """
     Loads the user-defined settings. If these don't
     exist, loads the default settings.
@@ -93,13 +93,12 @@ def load_settings(settings_file=SETTINGS_FILE):
     except FileNotFoundError:
         settings = DEFAULT_SETTINGS
 
-def save_settings():
+def save_settings(settings_file=os.path.join(WORKING_DIRECTORY,SETTINGS_FILE)):
     """
     Save the settings into the Settings file.
     """
     global settings
     try:
-        settings_file = SETTINGS_FILE
         with open(settings_file, 'w') as settings_yaml:
             yaml.dump(settings, settings_yaml)
     except:

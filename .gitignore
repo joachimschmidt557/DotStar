@@ -104,7 +104,7 @@ ENV/
 .vscode/
 
 # DotStar specific
-*/dotstar.star
+*.star
 */Repositories
 */Packages
 */DotStarSettings.star

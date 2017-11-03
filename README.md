@@ -38,7 +38,7 @@ For a starting point, clone or download
 
 If you don't have DotStar installed, just run this command in PowerShell:
 
-`(New-Object System.Net.WebClient).DownloadFile("URL", "dotstar.exe"); & Start-Process ".\dotstar.exe refresh" -NoNewWindow -Wait; & Start-Process ".\dotstar.exe -i dotstar" -NoNewWindow -Wait; & Remove-Item .\dotstar.exe`
+`(New-Object System.Net.WebClient).DownloadFile("https://github.com/joachimschmidt557/DotStar/releases/download/v0.1-alpha/dotstar.exe", "dotstar.exe"); & Start-Process ".\dotstar.exe refresh" -NoNewWindow -Wait; & Start-Process ".\dotstar.exe -i dotstar" -NoNewWindow -Wait; & Remove-Item .\dotstar.exe`
 
 ### Linux
 

@@ -6,6 +6,7 @@ Compilation Information:
         - installer.cfg
         - installer.nsi
         - build*
+        - __pycache__*
 Author information:
   Name: joachimschmidt557
   Company: ''
@@ -21,7 +22,7 @@ Application Information:
   Supported Platforms:
     - Win32
     - Win64
-    - macOS
+    #- macOS
     - Linux
 #Dependencies:
 #- Name: Python3

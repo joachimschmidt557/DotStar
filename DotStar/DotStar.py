@@ -39,6 +39,7 @@ PACKAGE_FILE_LINUX_UNINSTALL = "Package.Linux.Uninstall.sh"
 PACKAGE_FILE_LINUX_RUN = "Package.Linux.Run.sh"
 PACKAGE_FILE_LINUX_COMPILE = "Package.Linux.Compile.sh"
 
+WORKING_DIRECTORY = os.path.realpath(__file__)
 SETTINGS_FILE = "DotStarSettings.star"
 FILE_CACHE_DIRECTORY = "Packages"
 INSTALLED_FILES_DIRECTORY = "Installed"

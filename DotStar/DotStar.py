@@ -39,11 +39,11 @@ PACKAGE_FILE_LINUX_UNINSTALL = "Package.Linux.Uninstall.sh"
 PACKAGE_FILE_LINUX_RUN = "Package.Linux.Run.sh"
 PACKAGE_FILE_LINUX_COMPILE = "Package.Linux.Compile.sh"
 
-WORKING_DIRECTORY = os.path.realpath(__file__)
+WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 SETTINGS_FILE = "DotStarSettings.star"
 FILE_CACHE_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Packages")
 INSTALLED_FILES_DIRECTORY = os.path.join(FILE_CACHE_DIRECTORY, "Installed")
-REPO_DIRECTORY = "Repositories"
+REPO_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Repositories")
 
 CURRENT_PLATFORM = sys.platform
 CURRENT_VERSION = StrictVersion(__version__)

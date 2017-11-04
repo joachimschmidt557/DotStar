@@ -35,13 +35,6 @@ INSTALLED_FILES_DIRECTORY = os.path.join(PACKAGES_DIRECTORY, "Installed")
 REPO_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Repositories")
 
 CURRENT_VERSION = StrictVersion(__version__)
-ACTIONS = [
-    'r',    # Run the package
-    'i',    # Install the package
-    'I',    # Reinstall the package
-    'u',    # Uninstall the package
-    '0'     # Let the user decide
-]
 DEFAULT_SETTINGS = {
     "Repositories":
     [

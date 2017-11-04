@@ -370,16 +370,47 @@ def open_local_file(file_path, action='0'):
     except FileNotFoundError:
         logging.critical("File doesn't exist! " + str(err))
 
-def open_local_file_partially(file_path, file_name=PACKAGE_INFO_FILE):
+#def open_local_file_partially(file_path, file_name=PACKAGE_INFO_FILE):
+#    """
+#    Opens a local file and only extracts the given
+#    file name from the archive
+#    """
+#    try:
+#        # Extract file to temporary directory
+#        temp_dir = get_temporary_directory()
+#        logging.debug("Extracting file to temporary directory " + temp_dir)
+#    except zipfile.BadZipfile:
+#        pass
+
+def install_file(file_path):
     """
-    Opens a local file and only extracts the given
-    file name from the archive
+    Installs the given local file
     """
-    try:
-        # Extract file to temporary directory
-        temp_dir = get_temporary_directory()
-        logging.debug("Extracting file to temporary directory " + temp_dir)
-    except zipfile.BadZipfile:
+
+def uninstall_file(file_path):
+    """
+    Uninstalls the given local file
+    """
+
+def select_additional_tasks(folder_path, action):
+    """
+    Selects and runs additional steps
+    """
+    if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+        if os.path.exists(package_file_win_run):
+            subprocess.call([package_file_win_run], cwd=temp_dir)
+        elif os.path.exists(package_file_win):
+            pass
+        elif os.path.exists(package_file):
+            os.system("python " + package_file + " run")
+    elif get_current_platform() == "Linux":
+        if os.path.exists(package_file_linux_run):
+            subprocess.call(["bash", package_file_linux_run], cwd=temp_dir)
+        elif os.path.exists(package_file_linux):
+            pass
+        elif os.path.exists(package_file):
+            os.system("python " + package_file + " run")
+    elif get_current_platform() == "macOS":
         pass
 
 def compile_file(file_path):

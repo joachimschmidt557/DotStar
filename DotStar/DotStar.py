@@ -397,21 +397,44 @@ def select_additional_tasks(folder_path, action):
     Selects and runs additional steps
     """
     if get_current_platform() == "Win32" or get_current_platform() == "Win64":
-        if os.path.exists(package_file_win_run):
-            subprocess.call([package_file_win_run], cwd=temp_dir)
-        elif os.path.exists(package_file_win):
-            pass
+        # The script created specifically for this action
+        package_file_specific = os.path.join(folder_path, "Package.Win." + action + ".bat")
+
+        # The script created generally for this platform
+        package_file = os.path.join(folder_path, "Package.Win.bat")
+
+        if os.path.exists(package_file_specific):
+            subprocess.call([package_file_specific], cwd=folder_path)
         elif os.path.exists(package_file):
-            os.system("python " + package_file + " run")
+            pass
+        #elif os.path.exists(package_file):
+        #    os.system("python " + package_file + " run")
+
     elif get_current_platform() == "Linux":
-        if os.path.exists(package_file_linux_run):
-            subprocess.call(["bash", package_file_linux_run], cwd=temp_dir)
-        elif os.path.exists(package_file_linux):
-            pass
+        # The script created specifically for this action
+        package_file_specific = os.path.join(folder_path, "Package.Linux." + action + ".sh")
+
+        # The script created generally for this platform
+        package_file = os.path.join(folder_path, "Package.Linux.bat")
+
+        if os.path.exists(package_file_specific):
+            subprocess.call(["bash", package_file_specific], cwd=folder_path)
         elif os.path.exists(package_file):
-            os.system("python " + package_file + " run")
+            pass
+        #elif os.path.exists(package_file):
+        #    os.system("python " + package_file + " run")
+
     elif get_current_platform() == "macOS":
-        pass
+        # The script created specifically for this action
+        package_file_specific = os.path.join(folder_path, "Package.macOS." + action + ".sh")
+
+        # The script created generally for this platform
+        package_file = os.path.join(folder_path, "Package.macOS.sh")
+        
+        if os.path.exists(package_file_specific):
+            subprocess.call(["bash", package_file_specific], cwd=folder_path)
+        elif os.path.exists(package_file):
+            pass
 
 def compile_file(file_path):
     """

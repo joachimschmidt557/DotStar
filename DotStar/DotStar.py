@@ -27,17 +27,17 @@ __version__ = "0.1"
 # CONSTANTS
 PACKAGE_INFO_FILE = "Package.yml"
 
-PACKAGE_FILE = "Package.py"
-PACKAGE_FILE_WIN = "Package.Win.bat"
-PACKAGE_FILE_WIN_INSTALL = "Package.Win.Install.bat"
-PACKAGE_FILE_WIN_UNINSTALL = "Package.Win.Uninstall.bat"
-PACKAGE_FILE_WIN_RUN = "Package.Win.Run.bat"
-PACKAGE_FILE_WIN_COMPILE = "Package.Win.Compile.bat"
-PACKAGE_FILE_LINUX = "Package.Linux.sh"
-PACKAGE_FILE_LINUX_INSTALL = "Package.Linux.Install.sh"
-PACKAGE_FILE_LINUX_UNINSTALL = "Package.Linux.Uninstall.sh"
-PACKAGE_FILE_LINUX_RUN = "Package.Linux.Run.sh"
-PACKAGE_FILE_LINUX_COMPILE = "Package.Linux.Compile.sh"
+#PACKAGE_FILE = "Package.py"
+#PACKAGE_FILE_WIN = "Package.Win.bat"
+#PACKAGE_FILE_WIN_INSTALL = "Package.Win.Install.bat"
+#PACKAGE_FILE_WIN_UNINSTALL = "Package.Win.Uninstall.bat"
+#PACKAGE_FILE_WIN_RUN = "Package.Win.Run.bat"
+#PACKAGE_FILE_WIN_COMPILE = "Package.Win.Compile.bat"
+#PACKAGE_FILE_LINUX = "Package.Linux.sh"
+#PACKAGE_FILE_LINUX_INSTALL = "Package.Linux.Install.sh"
+#PACKAGE_FILE_LINUX_UNINSTALL = "Package.Linux.Uninstall.sh"
+#PACKAGE_FILE_LINUX_RUN = "Package.Linux.Run.sh"
+#PACKAGE_FILE_LINUX_COMPILE = "Package.Linux.Compile.sh"
 
 WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 SETTINGS_FILE = "DotStarSettings.star"
@@ -215,15 +215,15 @@ def open_local_file(file_path, action='0'):
 
         # Process file
         package_info_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
-        package_file = os.path.join(temp_dir, PACKAGE_FILE)
-        package_file_win = os.path.join(temp_dir, PACKAGE_FILE_WIN)
-        package_file_win_install = os.path.join(temp_dir, PACKAGE_FILE_WIN_INSTALL)
-        package_file_win_uninstall = os.path.join(temp_dir, PACKAGE_FILE_WIN_UNINSTALL)
-        package_file_win_run = os.path.join(temp_dir, PACKAGE_FILE_WIN_RUN)
-        package_file_linux = os.path.join(temp_dir, PACKAGE_FILE_LINUX)
-        package_file_linux_install = os.path.join(temp_dir, PACKAGE_FILE_LINUX_INSTALL)
-        package_file_linux_uninstall = os.path.join(temp_dir, PACKAGE_FILE_LINUX_UNINSTALL)
-        package_file_linux_run = os.path.join(temp_dir, PACKAGE_FILE_LINUX_RUN)
+        #package_file = os.path.join(temp_dir, PACKAGE_FILE)
+        #package_file_win = os.path.join(temp_dir, PACKAGE_FILE_WIN)
+        #package_file_win_install = os.path.join(temp_dir, PACKAGE_FILE_WIN_INSTALL)
+        #package_file_win_uninstall = os.path.join(temp_dir, PACKAGE_FILE_WIN_UNINSTALL)
+        #package_file_win_run = os.path.join(temp_dir, PACKAGE_FILE_WIN_RUN)
+        #package_file_linux = os.path.join(temp_dir, PACKAGE_FILE_LINUX)
+        #package_file_linux_install = os.path.join(temp_dir, PACKAGE_FILE_LINUX_INSTALL)
+        #package_file_linux_uninstall = os.path.join(temp_dir, PACKAGE_FILE_LINUX_UNINSTALL)
+        #package_file_linux_run = os.path.join(temp_dir, PACKAGE_FILE_LINUX_RUN)
         try:
             with open(package_info_file) as package_info_yaml:
                 data = yaml.load(package_info_yaml)
@@ -267,20 +267,22 @@ def open_local_file(file_path, action='0'):
                     # Run the app
                     if user_consent("Run the File? (y/n): "):
                         # Select appropiate script, depending on platform
-                        if get_current_platform() == "Win32" or get_current_platform() == "Win64":
-                            if os.path.exists(package_file_win_run):
-                                subprocess.call([package_file_win_run], cwd=temp_dir)
-                            elif os.path.exists(package_file_win):
-                                pass
-                            elif os.path.exists(package_file):
-                                os.system("python " + package_file + " run")
-                        elif get_current_platform() == "Linux":
-                            if os.path.exists(package_file_linux_run):
-                                subprocess.call(["bash", package_file_linux_run], cwd=temp_dir)
-                            elif os.path.exists(package_file_linux):
-                                pass
-                            elif os.path.exists(package_file):
-                                os.system("python " + package_file + " run")
+
+                        select_additional_tasks(temp_dir, "Run")
+                        #if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+                        #    if os.path.exists(package_file_win_run):
+                        #        subprocess.call([package_file_win_run], cwd=temp_dir)
+                        #    elif os.path.exists(package_file_win):
+                        #        pass
+                        #    elif os.path.exists(package_file):
+                        #        os.system("python " + package_file + " run")
+                        #elif get_current_platform() == "Linux":
+                        #    if os.path.exists(package_file_linux_run):
+                        #        subprocess.call(["bash", package_file_linux_run], cwd=temp_dir)
+                        #    elif os.path.exists(package_file_linux):
+                        #        pass
+                        #    elif os.path.exists(package_file):
+                        #        os.system("python " + package_file + " run")
                 elif action == 'i':
                     # Install the app
                     # Copy the package to the installation directory
@@ -291,49 +293,53 @@ def open_local_file(file_path, action='0'):
                     installed_file_path = shutil.copy(file_path, installation_dir)
                     os.rename(installed_file_path, os.path.join(installation_dir, new_file_name))
 
+                    select_additional_tasks(temp_dir, "Install")
+
                     # Additional installation steps
                     # Select appropiate script, depending on platform
-                    if get_current_platform() == "Win32" or get_current_platform() == "Win64":
-                        if os.path.exists(package_file_win_install):
-                            if user_consent("Run additional installation steps? (y/n): "):
-                                subprocess.call([package_file_win_install], cwd=temp_dir)
-                        elif os.path.exists(package_file_win):
-                            pass
-                        elif os.path.exists(package_file):
-                            if user_consent("Run additional installation steps? (y/n): "):
-                                os.system("python " + package_file + " install")
-                    elif get_current_platform() == "Linux":
-                        if os.path.exists(package_file_linux_install):
-                            if user_consent("Run additional installation steps? (y/n): "):
-                                subprocess.call(["bash", package_file_linux_install], cwd=temp_dir)
-                        elif os.path.exists(package_file_linux):
-                            pass
-                        elif os.path.exists(package_file):
-                            if user_consent("Run installation steps? (y/n): "):
-                                os.system("python " + package_file + " install")
+                    #if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+                    #    if os.path.exists(package_file_win_install):
+                    #        if user_consent("Run additional installation steps? (y/n): "):
+                    #            subprocess.call([package_file_win_install], cwd=temp_dir)
+                    #    elif os.path.exists(package_file_win):
+                    #        pass
+                    #    elif os.path.exists(package_file):
+                    #        if user_consent("Run additional installation steps? (y/n): "):
+                    #            os.system("python " + package_file + " install")
+                    #elif get_current_platform() == "Linux":
+                    #    if os.path.exists(package_file_linux_install):
+                    #        if user_consent("Run additional installation steps? (y/n): "):
+                    #            subprocess.call(["bash", package_file_linux_install], cwd=temp_dir)
+                    #    elif os.path.exists(package_file_linux):
+                    #        pass
+                    #    elif os.path.exists(package_file):
+                    #        if user_consent("Run installation steps? (y/n): "):
+                    #            os.system("python " + package_file + " install")
 
                     logging.info("Installation successful")
                 elif action == 'u':
                     # Additional uninstallation steps
                     # Select appropiate script, depending on platform
-                    if get_current_platform() == "Win32" or get_current_platform() == "Win64":
-                        if os.path.exists(package_file_win_uninstall):
-                            if user_consent("Run additional uninstallation steps? (y/n): "):
-                                subprocess.call(["bash", package_file_win_uninstall], cwd=temp_dir)
-                        elif os.path.exists(package_file_win):
-                            pass
-                        elif os.path.exists(package_file):
-                            if user_consent("Run additional uninstallation steps? (y/n): "):
-                                os.system("python " + package_file + " uninstall")
-                    elif get_current_platform() == "Linux":
-                        if os.path.exists(package_file_linux_uninstall):
-                            if user_consent("Run additional uninstallation steps? (y/n): "):
-                                subprocess.call(["bash", package_file_linux_uninstall], cwd=temp_dir)
-                        elif os.path.exists(package_file_linux):
-                            pass
-                        elif os.path.exists(package_file):
-                            if user_consent("Run uninstallation steps? (y/n): "):
-                                os.system("python " + package_file + " uninstall")
+                    #if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+                    #    if os.path.exists(package_file_win_uninstall):
+                    #        if user_consent("Run additional uninstallation steps? (y/n): "):
+                    #            subprocess.call(["bash", package_file_win_uninstall], cwd=temp_dir)
+                    #    elif os.path.exists(package_file_win):
+                    #        pass
+                    #    elif os.path.exists(package_file):
+                    #        if user_consent("Run additional uninstallation steps? (y/n): "):
+                    #            os.system("python " + package_file + " uninstall")
+                    #elif get_current_platform() == "Linux":
+                    #    if os.path.exists(package_file_linux_uninstall):
+                    #        if user_consent("Run additional uninstallation steps? (y/n): "):
+                    #            subprocess.call(["bash", package_file_linux_uninstall], cwd=temp_dir)
+                    #    elif os.path.exists(package_file_linux):
+                    #        pass
+                    #    elif os.path.exists(package_file):
+                    #        if user_consent("Run uninstallation steps? (y/n): "):
+                    #            os.system("python " + package_file + " uninstall")
+
+                    select_additional_tasks(temp_dir, "Uninstall")
 
                     # Delete the file
                     os.remove(file_path)
@@ -404,7 +410,9 @@ def select_additional_tasks(folder_path, action):
         package_file = os.path.join(folder_path, "Package.Win.bat")
 
         if os.path.exists(package_file_specific):
-            subprocess.call([package_file_specific], cwd=folder_path)
+            if user_consent("Additional supportive scripts for action '" + action + "' were found. " +
+                            "Run? (Y/n):"):
+                subprocess.call([package_file_specific], cwd=folder_path)
         elif os.path.exists(package_file):
             pass
         #elif os.path.exists(package_file):
@@ -418,7 +426,9 @@ def select_additional_tasks(folder_path, action):
         package_file = os.path.join(folder_path, "Package.Linux.bat")
 
         if os.path.exists(package_file_specific):
-            subprocess.call(["bash", package_file_specific], cwd=folder_path)
+            if user_consent("Additional supportive scripts for action '" + action + "' were found. " +
+                            "Run? (Y/n):"):
+                subprocess.call(["bash", package_file_specific], cwd=folder_path)
         elif os.path.exists(package_file):
             pass
         #elif os.path.exists(package_file):
@@ -432,7 +442,9 @@ def select_additional_tasks(folder_path, action):
         package_file = os.path.join(folder_path, "Package.macOS.sh")
         
         if os.path.exists(package_file_specific):
-            subprocess.call(["bash", package_file_specific], cwd=folder_path)
+            if user_consent("Additional supportive scripts for action '" + action + "' were found. " +
+                            "Run? (Y/n):"):
+                subprocess.call(["bash", package_file_specific], cwd=folder_path)
         elif os.path.exists(package_file):
             pass
 
@@ -445,8 +457,8 @@ def compile_file(file_path):
         # Create temporary folder to store the files into
         temp_dir = get_temporary_directory(create_directory=False)
         output_file = ""
-        package_file_win_compile = os.path.join(temp_dir, PACKAGE_FILE_WIN_COMPILE)
-        package_file_linux_compile = os.path.join(temp_dir, PACKAGE_FILE_LINUX_COMPILE)
+        #package_file_win_compile = os.path.join(temp_dir, PACKAGE_FILE_WIN_COMPILE)
+        #package_file_linux_compile = os.path.join(temp_dir, PACKAGE_FILE_LINUX_COMPILE)
 
         # Read the file
         with open(file_path) as compilation_info_yaml:
@@ -486,24 +498,26 @@ def compile_file(file_path):
         with open(package_yaml_file, 'w') as package_file:
             yaml.dump(data, package_file)
 
+        select_additional_tasks(temp_dir, "Compile")
+
         # Run the python script for additional compilation steps
-        script_file = os.path.join(temp_dir, PACKAGE_FILE)
-        if user_consent("Run compilation script? (y/n): "):
-            # Select appropiate script, depending on platform
-            if get_current_platform() == "Win32" or get_current_platform() == "Win64":
-                if os.path.exists(package_file_win_compile):
-                    subprocess.call([package_file_win_compile], cwd=temp_dir)
-                #elif os.path.exists(package_file_win):
-                #    pass
-                elif os.path.exists(script_file):
-                    os.system("python " + script_file + " run")
-            elif get_current_platform() == "Linux":
-                if os.path.exists(package_file_linux_compile):
-                    subprocess.call(["bash", package_file_linux_compile], cwd=temp_dir)
-                #elif os.path.exists(package_file_linux):
-                #    pass
-                elif os.path.exists(script_file):
-                    os.system("python " + script_file + " run")
+        #script_file = os.path.join(temp_dir, PACKAGE_FILE)
+        #if user_consent("Run compilation script? (y/n): "):
+        #    # Select appropiate script, depending on platform
+        #    if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+        #        if os.path.exists(package_file_win_compile):
+        #            subprocess.call([package_file_win_compile], cwd=temp_dir)
+        #        #elif os.path.exists(package_file_win):
+        #        #    pass
+        #        elif os.path.exists(script_file):
+        #            os.system("python " + script_file + " run")
+        #    elif get_current_platform() == "Linux":
+        #        if os.path.exists(package_file_linux_compile):
+        #            subprocess.call(["bash", package_file_linux_compile], cwd=temp_dir)
+        #        #elif os.path.exists(package_file_linux):
+        #        #    pass
+        #        elif os.path.exists(script_file):
+        #            os.system("python " + script_file + " run")
 
         # Zip the folder
         compress_folder(temp_dir, output_file)

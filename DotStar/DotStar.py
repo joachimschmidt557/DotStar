@@ -41,8 +41,9 @@ PACKAGE_FILE_LINUX_COMPILE = "Package.Linux.Compile.sh"
 
 WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 SETTINGS_FILE = "DotStarSettings.star"
-FILE_CACHE_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Packages")
-INSTALLED_FILES_DIRECTORY = os.path.join(FILE_CACHE_DIRECTORY, "Installed")
+PACKAGES_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Packages")
+PACKAGE_CACHE_DIRECTORY = os.path.join(PACKAGES_DIRECTORY, "Cache")
+INSTALLED_FILES_DIRECTORY = os.path.join(PACKAGES_DIRECTORY, "Installed")
 REPO_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Repositories")
 
 CURRENT_VERSION = StrictVersion(__version__)
@@ -550,7 +551,7 @@ def add_repo(url):
     save_settings to have any effect.
     """
     if not is_url(url):
-        logging.critical(url + " is not a respository URL.")
+        logging.critical(url + " is not a valid URL.")
         return
     settings["Repositories"].append(url)
     logging.info("Repository " + url + " added to the list!")

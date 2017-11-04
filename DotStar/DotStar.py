@@ -154,10 +154,10 @@ def open_file(path, action='0'):
         if len(available_files) > 1:
             pass
         if len(available_files) == 1:
-            if not(is_locked(path) and (action == 'i' or action == 'u')):
-                if action == 'i':
+            if not(is_locked(path) and (action == "Install" or action == "Uninstall")):
+                if action == "Install":
                     # The package should be reinstalled
-                    action = 'I'
+                    action = "Install"
                 local_file_path = os.path.join(INSTALLED_FILES_DIRECTORY, path + ".star")
             else:
                 logging.error(path + " is locked. To manipulate this file, unlock it first.")
@@ -228,7 +228,7 @@ def open_local_file(file_path, action='0'):
                     # Check if the dependecy is installed
                     if not is_installed(dependency["Name"]):
                         # Install dependency
-                        open_local_file(dependency["File"], action='i')
+                        open_local_file(dependency["File"], action="Install")
 
             # Check the type
             if "Application Information" in data:
@@ -242,13 +242,13 @@ def open_local_file(file_path, action='0'):
                         return
 
                 # Check our specified action
-                if action == 'r':
+                if action == "Run":
                     # Run the app
                     if user_consent("Run the File? (y/n): "):
                         # Select appropiate script, depending on platform
 
                         select_additional_tasks(temp_dir, "Run")
-                elif action == 'i':
+                elif action == "Install":
                     # Install the app
                     # Copy the package to the installation directory
                     installation_dir = INSTALLED_FILES_DIRECTORY
@@ -262,7 +262,7 @@ def open_local_file(file_path, action='0'):
                     select_additional_tasks(temp_dir, "Install")
                     
                     logging.info("Installation successful")
-                elif action == 'u':
+                elif action == "Uninstall":
                     # Additional uninstallation steps
                     select_additional_tasks(temp_dir, "Uninstall")
 
@@ -756,11 +756,11 @@ if __name__ == "__main__":
             # Normal file
             action_to_perform = '0'
             if result.run:
-                action_to_perform = 'r'
+                action_to_perform = "Run"
             elif result.install:
-                action_to_perform = 'i'
+                action_to_perform = "Install"
             elif result.uninstall:
-                action_to_perform = 'u'
+                action_to_perform = "Uninstall"
             open_file(input_file, action=action_to_perform)
 
     # Finished, now clean up

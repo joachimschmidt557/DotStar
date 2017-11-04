@@ -253,7 +253,7 @@ def open_local_file(file_path, action='0'):
 
                     # Additional installation steps
                     select_additional_tasks(temp_dir, "Install")
-                    
+
                     logging.info("Installation successful")
                 elif action == "Uninstall":
                     # Additional uninstallation steps
@@ -269,15 +269,6 @@ def open_local_file(file_path, action='0'):
                     print(info["Description"])
                     print("Possible actions: ")
 
-            #elif "Document Information" in data:
-            #    # Type: Document package
-            #    info = data["Document Information"]
-            #    resources = info["Resources"]
-            #    for resource in resources:
-            #        pass
-            #elif "Folder Information" in data:
-            #    # Type: Folder package
-            #    pass
             else:
                 # Empty file
                 logging.warning("This file is an empty file.")
@@ -691,9 +682,9 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.CRITICAL)
 
     # Yes to all ?
-    yes_to_all = settings["Security"]["Always allow running scripts"]
-    if result.yestoall:
+    if settings["Security"]["Always allow running scripts"] or result.yestoall:
         yes_to_all = True
+    else: yes_to_all = False
 
     # Go though input files
     for input_file in result.files:

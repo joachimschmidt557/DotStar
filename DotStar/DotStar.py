@@ -22,7 +22,7 @@ import hashlib
 import yaml
 
 # INFO
-__version__ = "0.1"
+__version__ = "0.1.1"
 
 # CONSTANTS
 PACKAGE_INFO_FILE = "Package.yml"

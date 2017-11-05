@@ -165,7 +165,9 @@ def open_file(path, action='0'):
             if len(available_files) > 1:
                 pass
             else:
-                local_file_path = download_file(available_files[0]["URL"], get_temporary_directory())
+                local_file_path = cache_retrieve_file(available_files[0]["URL"],
+                                                      available_files[0]["Name"],
+                                                      available_files[0]["Version"])
 
     # Special file names
     if local_file_path.endswith("DotStarSettings.star"):
@@ -237,10 +239,9 @@ def open_local_file(file_path, action='0'):
                 # Check our specified action
                 if action == "Run":
                     # Run the app
-                    if user_consent("Run the File? (y/n): "):
-                        # Select appropiate script, depending on platform
+                    # Select appropiate script, depending on platform
+                    select_additional_tasks(temp_dir, "Run")
 
-                        select_additional_tasks(temp_dir, "Run")
                 elif action == "Install":
                     # Install the app
                     # Copy the package to the installation directory
@@ -296,16 +297,6 @@ def open_local_file(file_path, action='0'):
 #        logging.debug("Extracting file to temporary directory " + temp_dir)
 #    except zipfile.BadZipfile:
 #        pass
-
-def install_file(file_path):
-    """
-    Installs the given local file
-    """
-
-def uninstall_file(file_path):
-    """
-    Uninstalls the given local file
-    """
 
 def select_additional_tasks(folder_path, action):
     """
@@ -439,6 +430,21 @@ def compress_folder(folder_path, zipfile_path):
     # Remove the .zip part of the file name
     os.rename(zipfile_path + ".zip", zipfile_path)
 
+def cache_retrieve_file(url, file_name, version):
+    """
+    Checks the cache if the file is already downloaded. If
+    not, then download the file and add it to the cache.
+    Returns the file path of the local file.
+    """
+    # Check if the file is already in the cache
+    local_file_path = os.path.join(PACKAGE_CACHE_DIRECTORY, file_name, version, file_name)
+    if os.path.isfile(local_file_path):
+        return local_file_path
+
+    # Download the file into the cache
+    download_file(url, os.path.join(PACKAGE_CACHE_DIRECTORY, file_name, version), file_name)
+    return local_file_path
+
 def is_url(path):
     """
     Returns whether path is a URL
@@ -458,6 +464,8 @@ def download_file(url, folder_path, file_name="Temp.star"):
     of the downloaded file
     """
     logging.info("Downloading " + url)
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
     file_path = os.path.join(folder_path, file_name)
     r = requests.get(url)
     with open(file_path, "wb") as dotstarfile:

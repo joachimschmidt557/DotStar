@@ -302,21 +302,26 @@ def select_additional_tasks(folder_path, action):
     """
     Selects and runs additional steps
     """
+    user_consent_message = ("Additional supportive scripts for action '" + action + 
+                            "' were found. Run? (Y/n):")
+
     if get_current_platform() == "Win32" or get_current_platform() == "Win64":
         # The script created specifically for this action
         package_file_specific = os.path.join(folder_path, "Package.Win." + action + ".bat")
+        package_file_specific_posh = os.path.join(folder_path, "Package.Win." + action + ".ps1")
 
         # The script created generally for this platform
         package_file = os.path.join(folder_path, "Package.Win.bat")
+        package_file_posh = os.path.join(folder_path, "Package.Win.ps1")
 
-        if os.path.exists(package_file_specific):
-            if user_consent("Additional supportive scripts for action '" + action + "' were found. " +
-                            "Run? (Y/n):"):
+        if os.path.exists(package_file_specific_posh):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific_posh], cwd=folder_path)
+        elif os.path.exists(package_file_specific):
+            if user_consent(user_consent_message):
                 subprocess.call([package_file_specific], cwd=folder_path)
         elif os.path.exists(package_file):
             pass
-        #elif os.path.exists(package_file):
-        #    os.system("python " + package_file + " run")
 
     elif get_current_platform() == "Linux":
         # The script created specifically for this action
@@ -326,13 +331,10 @@ def select_additional_tasks(folder_path, action):
         package_file = os.path.join(folder_path, "Package.Linux.bat")
 
         if os.path.exists(package_file_specific):
-            if user_consent("Additional supportive scripts for action '" + action + "' were found. " +
-                            "Run? (Y/n):"):
+            if user_consent(user_consent_message):
                 subprocess.call(["bash", package_file_specific], cwd=folder_path)
         elif os.path.exists(package_file):
             pass
-        #elif os.path.exists(package_file):
-        #    os.system("python " + package_file + " run")
 
     elif get_current_platform() == "macOS":
         # The script created specifically for this action
@@ -340,10 +342,9 @@ def select_additional_tasks(folder_path, action):
 
         # The script created generally for this platform
         package_file = os.path.join(folder_path, "Package.macOS.sh")
-        
+
         if os.path.exists(package_file_specific):
-            if user_consent("Additional supportive scripts for action '" + action + "' were found. " +
-                            "Run? (Y/n):"):
+            if user_consent(user_consent_message):
                 subprocess.call(["bash", package_file_specific], cwd=folder_path)
         elif os.path.exists(package_file):
             pass

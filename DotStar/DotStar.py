@@ -445,6 +445,24 @@ def cache_retrieve_file(url, file_name, version):
     download_file(url, os.path.join(PACKAGE_CACHE_DIRECTORY, file_name, version), file_name)
     return local_file_path
 
+def cache_clear_old_versions():
+    """
+    Clears all old versions of programs in the cache
+    """
+    #TODO
+
+def cache_clear():
+    """
+    Clear all cached files
+    """
+    if not os.path.exists(PACKAGE_CACHE_DIRECTORY):
+        os.makedirs(PACKAGE_CACHE_DIRECTORY)
+        logging.info("Cache is already empty")
+        return
+    shutil.rmtree(PACKAGE_CACHE_DIRECTORY)
+    os.makedirs(PACKAGE_CACHE_DIRECTORY)
+    logging.info("Cache cleared")
+
 def is_url(path):
     """
     Returns whether path is a URL

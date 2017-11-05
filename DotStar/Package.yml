@@ -17,7 +17,7 @@ Application Information:
   Friendly Name: DotStar
   Description: Open file container format for universal, cross-platform applications
     and other files
-  Version: 0.1.0
+  Version: 0.1.1
   Version System: SemVer
   Supported Platforms:
     - Win32

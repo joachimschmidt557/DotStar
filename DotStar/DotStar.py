@@ -302,7 +302,7 @@ def select_additional_tasks(folder_path, action):
     """
     Selects and runs additional steps
     """
-    user_consent_message = ("Additional supportive scripts for action '" + action + 
+    user_consent_message = ("Additional supportive scripts for action '" + action +
                             "' were found. Run? (Y/n):")
 
     if get_current_platform() == "Win32" or get_current_platform() == "Win64":

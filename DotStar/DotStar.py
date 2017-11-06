@@ -147,7 +147,7 @@ def open_file(input_name, action='0'):
         #if len(available_files) > 1:
         #    pass
         if len(available_files) == 1:
-            if not(is_locked(input_name) and (action == "Install" or action == "Uninstall")):
+            if not (is_locked(input_name) and (action == "Install" or action == "Uninstall")):
                 if action == "Install":
                     # The package should be reinstalled
                     action = "Install"
@@ -286,8 +286,9 @@ def open_local_file_or_folder(file_or_dir_path, action='0'):
             logging.critical("Error decoding YAML")
 
         # If necessary, clean up the temporary directory
-        shutil.rmtree(temp_dir)
-        logging.debug("Removed temporary directory " + temp_dir)
+        if not os.path.isdir(file_or_dir_path):
+            shutil.rmtree(temp_dir)
+            logging.debug("Removed temporary directory " + temp_dir)
     except zipfile.BadZipFile:
         logging.critical("Bad zip file!")
     except FileNotFoundError:

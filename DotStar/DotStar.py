@@ -151,7 +151,7 @@ def open_file(path, action='0'):
                 if action == "Install":
                     # The package should be reinstalled
                     action = "Install"
-                local_file_path = os.path.join(INSTALLED_FILES_DIRECTORY, path + ".star")
+                local_file_path = os.path.join(INSTALLED_FILES_DIRECTORY, path)
             else:
                 logging.error(path + " is locked. To manipulate this file, unlock it first.")
                 return
@@ -175,26 +175,32 @@ def open_file(path, action='0'):
         save_settings()
     elif local_file_path.endswith("Package.yml"):
         compile_file(local_file_path)
-    #elif local_file_path.endswith("Run.star"):
-    #    open_local_file(local_file_path, action='r')
+
     # Normal DotStar files
     else:
-        open_local_file(local_file_path, action=action)
+        open_local_file_or_folder(local_file_path, action=action)
 
     # Clean up if necessary
     if local_file_path.endswith("Temp.star"):
         shutil.rmtree(os.path.dirname(local_file_path))
 
-def open_local_file(file_path, action='0'):
+def open_local_file_or_folder(file_or_dir_path, action='0'):
     """
     Opens a .star file which is on the local hard-drive
     of the computer
     """
     try:
-        # Extract file to temporary directory
-        temp_dir = get_temporary_directory()
-        logging.debug("Extracting file to temporary directory " + temp_dir)
-        decompress_file(file_path, temp_dir)
+        if os.path.isfile(file_or_dir_path):
+            # Extract file to temporary directory
+            temp_dir = get_temporary_directory()
+            logging.debug("Extracting file to temporary directory " + temp_dir)
+            decompress_file(file_or_dir_path, temp_dir)
+        elif os.path.isdir(file_or_dir_path):
+            # Set this folder as our working directory
+            temp_dir = file_or_dir_path
+        else:
+            logging.error("Path is whether file nor folder.")
+            return
 
         # Process file
         package_info_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)
@@ -223,7 +229,7 @@ def open_local_file(file_path, action='0'):
                     # Check if the dependecy is installed
                     if not is_installed(dependency["Name"]):
                         # Install dependency
-                        open_local_file(dependency["File"], action="Install")
+                        open_local_file_or_folder(dependency["File"], action="Install")
 
             # Check the type
             if "Application Information" in data:
@@ -246,8 +252,7 @@ def open_local_file(file_path, action='0'):
                     # Install the app
                     # Copy the temp_dir to the installation directory
                     installation_dir = os.path.join(INSTALLED_FILES_DIRECTORY,
-                                                    info["Name"],
-                                                    info["Version"])
+                                                    info["Name"])
                     if not os.path.exists(os.path.dirname(installation_dir)):
                         os.makedirs(os.path.dirname(installation_dir))
                     if os.path.exists(installation_dir):
@@ -263,8 +268,8 @@ def open_local_file(file_path, action='0'):
                     select_additional_tasks(temp_dir, "Uninstall")
 
                     # Delete the file
-                    os.remove(file_path)
-                    logging.info("Removed file " + file_path)
+                    os.remove(file_or_dir_path)
+                    logging.info("Removed file " + file_or_dir_path)
                 else:
                     # If no action is specified, let the user decide
                     print(info["Friendly Name"])

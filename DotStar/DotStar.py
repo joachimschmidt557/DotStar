@@ -268,8 +268,12 @@ def open_local_file_or_folder(file_or_dir_path, action='0'):
                     select_additional_tasks(temp_dir, "Uninstall")
 
                     # Delete the file
-                    os.remove(file_or_dir_path)
-                    logging.info("Removed file " + file_or_dir_path)
+                    if os.path.isfile(file_or_dir_path):
+                        os.remove(file_or_dir_path)
+                        logging.info("Removed file " + file_or_dir_path)
+                    else:
+                        shutil.rmtree(file_or_dir_path)
+                        logging.info("Removed folder " + file_or_dir_path)
                 else:
                     # If no action is specified, let the user decide
                     print(info["Friendly Name"])
@@ -286,7 +290,7 @@ def open_local_file_or_folder(file_or_dir_path, action='0'):
             logging.critical("Error decoding YAML")
 
         # If necessary, clean up the temporary directory
-        if not os.path.isdir(file_or_dir_path):
+        if os.path.isfile(file_or_dir_path):
             shutil.rmtree(temp_dir)
             logging.debug("Removed temporary directory " + temp_dir)
     except zipfile.BadZipFile:

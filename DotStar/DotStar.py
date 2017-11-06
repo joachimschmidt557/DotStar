@@ -127,38 +127,38 @@ def user_consent(message):
         return True
     return False
 
-def open_file(path, action='0'):
+def open_file(input_name, action='0'):
     """
     Does whats necessary to process the file and
     afterwards opens it
     """
-    logging.info("Processing file " + path)
+    logging.info("Processing file " + input_name)
 
     # Retrieve the file
     local_file_path = ""
-    if os.path.isfile(path):
-        local_file_path = path
-    elif is_url(path):
-        local_file_path = download_file(path, get_temporary_directory())
-    elif not path.endswith(".star"):
+    if os.path.isfile(input_name):
+        local_file_path = input_name
+    elif is_url(input_name):
+        local_file_path = download_file(input_name, get_temporary_directory())
+    elif not input_name.endswith(".star"):
         # Check if the file is installed
-        logging.info("Searching installed files for " + path)
-        available_files = search_installed_files(path)
-        if len(available_files) > 1:
-            pass
+        logging.info("Searching installed files for " + input_name)
+        available_files = search_installed_files(input_name)
+        #if len(available_files) > 1:
+        #    pass
         if len(available_files) == 1:
-            if not(is_locked(path) and (action == "Install" or action == "Uninstall")):
+            if not(is_locked(input_name) and (action == "Install" or action == "Uninstall")):
                 if action == "Install":
                     # The package should be reinstalled
                     action = "Install"
-                local_file_path = os.path.join(INSTALLED_FILES_DIRECTORY, path)
+                local_file_path = os.path.join(INSTALLED_FILES_DIRECTORY, input_name)
             else:
-                logging.error(path + " is locked. To manipulate this file, unlock it first.")
+                logging.error(input_name + " is locked. To manipulate this file, unlock it first.")
                 return
         else:
             # If the file is not installed, try to get file from repository
-            logging.info("Searching repositories for " + path)
-            available_files = search_repos_for_files(path)
+            logging.info("Searching repositories for " + input_name)
+            available_files = search_repos_for_files(input_name)
             if len(available_files) < 1:
                 logging.error("No package found in the repositories")
                 return
@@ -653,8 +653,7 @@ def search_installed_files(file_name):
     files (file_name without ".star")
     """
     all_installed_files = list_installed_files()
-    file_name_with_extension = file_name + ".star"
-    return list(filter(lambda item: item == file_name_with_extension, all_installed_files))
+    return list(filter(lambda item: item == file_name, all_installed_files))
 
 def get_temporary_directory(in_folder_path=os.path.join(tempfile.gettempdir(),
                                                         "DotStar"),

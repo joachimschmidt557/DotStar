@@ -244,13 +244,15 @@ def open_local_file(file_path, action='0'):
 
                 elif action == "Install":
                     # Install the app
-                    # Copy the package to the installation directory
-                    installation_dir = INSTALLED_FILES_DIRECTORY
-                    new_file_name = info["Name"] + ".star"
-                    if not os.path.exists(installation_dir):
-                        os.makedirs(installation_dir)
-                    installed_file_path = shutil.copy(file_path, installation_dir)
-                    os.rename(installed_file_path, os.path.join(installation_dir, new_file_name))
+                    # Copy the temp_dir to the installation directory
+                    installation_dir = os.path.join(INSTALLED_FILES_DIRECTORY,
+                                                    info["Name"],
+                                                    info["Version"])
+                    if not os.path.exists(os.path.dirname(installation_dir)):
+                        os.makedirs(os.path.dirname(installation_dir))
+                    if os.path.exists(installation_dir):
+                        shutil.rmtree(installation_dir)
+                    shutil.copytree(temp_dir, installation_dir)
 
                     # Additional installation steps
                     select_additional_tasks(temp_dir, "Install")
@@ -378,7 +380,8 @@ def compile_file(file_path):
                         ignore=shutil.ignore_patterns(*ignored_list))
 
         # Get the output file name
-        output_file = os.path.join(os.getcwd(), other_data["Application Information"]["Name"] + ".star")
+        output_file = os.path.join(os.getcwd(),
+                                   other_data["Application Information"]["Name"] + ".star")
 
         # Create Package.yml
         package_yaml_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)

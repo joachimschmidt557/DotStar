@@ -582,12 +582,13 @@ def list_installed_files():
     Returns a list with filenames (absoulte path) of
     installed files
     """
+    #TODO: Better output with details (version)
     installation_dir = INSTALLED_FILES_DIRECTORY
     if not os.path.exists(installation_dir):
         os.makedirs(installation_dir)
         return []
-    onlyfiles = [f for f in os.listdir(installation_dir) if os.path.isfile(os.path.join(installation_dir, f))]
-    return onlyfiles
+    onlyfolders = [f for f in os.listdir(installation_dir) if os.path.isdir(os.path.join(installation_dir, f))]
+    return onlyfolders
 
 def is_installed(file_name):
     """
@@ -734,9 +735,9 @@ if __name__ == "__main__":
         elif input_file == "listinstalled":
             all_installed_files = list_installed_files()
             if len(all_installed_files) < 1:
-                print("No files installed yet.")
+                print("No packages installed yet.")
             else:
-                print("Following files are installed: ")
+                print("Following packages are installed: ")
                 for item in all_installed_files:
                     print("- " + item)
         elif input_file == "listrepos":

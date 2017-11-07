@@ -38,11 +38,13 @@ For a starting point, clone or download
 
 If you don't have DotStar installed, just run this command in PowerShell:
 
-`(New-Object System.Net.WebClient).DownloadFile("https://github.com/joachimschmidt557/DotStar/releases/download/v0.1-alpha/dotstar.exe", "dotstar.exe"); & Start-Process ".\dotstar.exe refresh" -NoNewWindow -Wait; & Start-Process ".\dotstar.exe -i dotstar" -NoNewWindow -Wait; & Remove-Item .\dotstar.exe`
+`iex (new-object net.webclient).downloadstring('https://github.com/joachimschmidt557/DotStar/raw/master/Get.ps1')`
 
 ### Linux
 
-*Coming soon*
+If you don't have DotStar installed, just run this command in a terminal:
+
+`sh -c "$(curl -fsSL URL)"`
 
 ### macOS
 

@@ -28,7 +28,7 @@ __version__ = "0.1.1"
 PACKAGE_INFO_FILE = "Package.yml"
 
 WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-SETTINGS_FILE = "DotStarSettings.star"
+SETTINGS_FILE = os.path.join(WORKING_DIRECTORY, "DotStarSettings.star")
 PACKAGES_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Packages")
 PACKAGE_CACHE_DIRECTORY = os.path.join(PACKAGES_DIRECTORY, "Cache")
 INSTALLED_FILES_DIRECTORY = os.path.join(PACKAGES_DIRECTORY, "Installed")
@@ -60,7 +60,7 @@ DEFAULT_SETTINGS = {
 settings = None
 yes_to_all = False
 
-def load_settings(settings_file=os.path.join(WORKING_DIRECTORY, SETTINGS_FILE)):
+def load_settings(settings_file=SETTINGS_FILE):
     """
     Loads the user-defined settings. If these don't
     exist, loads the default settings.
@@ -74,7 +74,7 @@ def load_settings(settings_file=os.path.join(WORKING_DIRECTORY, SETTINGS_FILE)):
     except FileNotFoundError:
         settings = DEFAULT_SETTINGS
 
-def save_settings(settings_file=os.path.join(WORKING_DIRECTORY, SETTINGS_FILE)):
+def save_settings(settings_file=SETTINGS_FILE):
     """
     Save the settings into the Settings file.
     """
@@ -496,6 +496,9 @@ def download_file(url, folder_path, file_name="Temp.star"):
     of the downloaded file
     """
     logging.info("Downloading " + url)
+    if not is_url(url):
+        logging.error("URL is not valid.")
+        return
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
     file_path = os.path.join(folder_path, file_name)

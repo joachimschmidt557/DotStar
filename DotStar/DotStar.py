@@ -314,10 +314,11 @@ def select_additional_tasks(folder_path, action):
     """
     Selects and runs additional steps
     """
+    current_platform = get_current_platform()
     user_consent_message = ("Additional supportive scripts for action '" + action +
                             "' were found. Run? (Y/n):")
 
-    if get_current_platform() == "Win32" or get_current_platform() == "Win64":
+    if current_platform.startswith("Win"):
         # The script created specifically for this action
         package_file_specific = os.path.join(folder_path, "Package.Win." + action + ".bat")
         package_file_specific_posh = os.path.join(folder_path, "Package.Win." + action + ".ps1")
@@ -335,7 +336,7 @@ def select_additional_tasks(folder_path, action):
         elif os.path.exists(package_file):
             pass
 
-    elif get_current_platform() == "Linux":
+    elif current_platform.startswith("Linux"):
         # The script created specifically for this action
         package_file_specific = os.path.join(folder_path, "Package.Linux." + action + ".sh")
 
@@ -348,7 +349,7 @@ def select_additional_tasks(folder_path, action):
         elif os.path.exists(package_file):
             pass
 
-    elif get_current_platform() == "macOS":
+    elif current_platform.startswith("macOS"):
         # The script created specifically for this action
         package_file_specific = os.path.join(folder_path, "Package.macOS." + action + ".sh")
 

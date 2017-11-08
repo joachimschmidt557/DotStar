@@ -27,8 +27,14 @@ __version__ = "0.1.1"
 # CONSTANTS
 PACKAGE_INFO_FILE = "Package.yml"
 
-WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-SETTINGS_FILE = os.path.join(WORKING_DIRECTORY, "DotStarSettings.star")
+# From https://stackoverflow.com/questions/404744/determining-application-path-in-a-python-exe-generated-by-pyinstaller#404750
+# determine if application is a script file or frozen exe
+if getattr(sys, 'frozen', False):
+    WORKING_DIRECTORY = os.path.dirname(sys.executable)
+elif __file__:
+    WORKING_DIRECTORY = os.path.dirname(__file__)
+
+SETTINGS_FILE = os.path.join(WORKING_DIRECTORY, "DotStarSettings.yml")
 PACKAGES_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Packages")
 PACKAGE_CACHE_DIRECTORY = os.path.join(PACKAGES_DIRECTORY, "Cache")
 INSTALLED_FILES_DIRECTORY = os.path.join(PACKAGES_DIRECTORY, "Installed")
@@ -168,9 +174,14 @@ def open_file(input_name, action='0'):
                 local_file_path = cache_retrieve_file(available_files[0]["URL"],
                                                       available_files[0]["Name"],
                                                       available_files[0]["Version"])
+    else:
+        logging.info("File could not be found locally or in the repositories. Check " +
+                     "your spelling.")
+        return
 
+    # File is retrieved, now open it
     # Special file names
-    if local_file_path.endswith("DotStarSettings.star"):
+    if local_file_path.endswith("DotStarSettings.yml"):
         load_settings(local_file_path)
         save_settings()
     elif local_file_path.endswith("Package.yml"):

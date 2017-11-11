@@ -32,7 +32,7 @@ PACKAGE_INFO_FILE = "Package.yml"
 if getattr(sys, 'frozen', False):
     WORKING_DIRECTORY = os.path.dirname(sys.executable)
 elif __file__:
-    WORKING_DIRECTORY = os.path.dirname(__file__)
+    WORKING_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 SETTINGS_FILE = os.path.join(WORKING_DIRECTORY, "DotStarSettings.yml")
 PACKAGES_DIRECTORY = os.path.join(WORKING_DIRECTORY, "Packages")

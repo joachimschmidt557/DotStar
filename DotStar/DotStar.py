@@ -347,18 +347,6 @@ def open_local_file_or_folder(file_or_dir_path, action='0'):
     except FileNotFoundError as err:
         logging.critical("File doesn't exist! " + str(err))
 
-#def open_local_file_partially(file_path, file_name=PACKAGE_INFO_FILE):
-#    """
-#    Opens a local file and only extracts the given
-#    file name from the archive
-#    """
-#    try:
-#        # Extract file to temporary directory
-#        temp_dir = get_temporary_directory()
-#        logging.debug("Extracting file to temporary directory " + temp_dir)
-#    except zipfile.BadZipfile:
-#        pass
-
 def select_additional_tasks(folder_path, action):
     """
     Selects and runs additional steps
@@ -580,6 +568,7 @@ def verify_integrity(folder_path, integrity_info):
     Verifies the folder's integrity using the data
     """
     return True
+    #TODO
 
 def refresh_local_repo():
     """
@@ -722,6 +711,7 @@ def list_outdated_files():
     """
     Lists all outdated, installed files
     """
+    #TODO
 
 def search_installed_files(file_name):
     """

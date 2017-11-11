@@ -128,10 +128,44 @@ def user_consent(message):
                user_input == 'Y' or
                user_input == 'n' or
                user_input == 'N'):
-        user_input = input("Please provide a correct option")
+        user_input = input("Please provide a correct option: ")
     if user_input == '' or user_input == 'y' or user_input == 'Y':
         return True
     return False
+
+def user_ask_preferred_action(actions=[]):
+    """
+    Asks the user which action should be run
+    and returns the specified action.
+    """
+    # Append default actions
+    actions.append("Run")
+    actions.append("Install")
+    actions.append("Uninstall")
+
+    # Ask user
+    print("Following actions are available:")
+    index = 0
+    for action in actions:
+        print("[" + str(index) + "]: " + action)
+        index += 1
+    preferred_action = input("Enter number of action which should be performed: ")
+    is_valid = True
+    try:
+        int(preferred_action)
+        if not 0 <= int(preferred_action) < len(actions):
+            raise ValueError
+    except:
+        is_valid = False
+    while not is_valid:
+        preferred_action = input("Enter a valid action number: ")
+        try:
+            int(preferred_action)
+            if not 0 <= int(preferred_action) < len(actions):
+                raise ValueError
+        except:
+            is_valid = False
+    return actions[int(preferred_action)]
 
 def open_file(input_name, action='0'):
     """
@@ -242,16 +276,24 @@ def open_local_file_or_folder(file_or_dir_path, action='0'):
                         # Install dependency
                         open_local_file_or_folder(dependency["File"], action="Install")
 
-            # Check the type
-            if "Application Information" in data:
-                # Type: Application package
-                info = data["Application Information"]
+            if "Package Information" in data:
+                info = data["Package Information"]
 
                 # Check the platform area
                 if "Supported Platforms" in info:
                     if get_current_platform() not in info["Supported Platforms"]:
                         logging.critical("This app is currently not supported on this platform")
                         return
+
+                # If no action is specified, let the user decide
+                if action == '0':
+                    print(info["Friendly Name"])
+                    print("Version " + info["Version"])
+                    print(info["Description"])
+                    if "Actions" in info:
+                        action = user_ask_preferred_action(info["Actions"])
+                    else:
+                        action = user_ask_preferred_action()
 
                 # Check our specified action
                 if action == "Run":
@@ -286,11 +328,7 @@ def open_local_file_or_folder(file_or_dir_path, action='0'):
                         shutil.rmtree(file_or_dir_path)
                         logging.info("Removed folder " + file_or_dir_path)
                 else:
-                    # If no action is specified, let the user decide
-                    print(info["Friendly Name"])
-                    print("Version " + info["Version"])
-                    print(info["Description"])
-                    print("Possible actions: ")
+                    logging.error("No action specified")
 
             else:
                 # Empty file
@@ -306,7 +344,7 @@ def open_local_file_or_folder(file_or_dir_path, action='0'):
             logging.debug("Removed temporary directory " + temp_dir)
     except zipfile.BadZipFile:
         logging.critical("Bad zip file!")
-    except FileNotFoundError:
+    except FileNotFoundError as err:
         logging.critical("File doesn't exist! " + str(err))
 
 #def open_local_file_partially(file_path, file_name=PACKAGE_INFO_FILE):
@@ -331,83 +369,65 @@ def select_additional_tasks(folder_path, action):
 
     if current_platform.startswith("Win64"):
         # The script created specifically for this action
-        package_file_specific = os.path.join(folder_path, "Package.Win64." + action + ".bat")
-        package_file_specific_posh = os.path.join(folder_path, "Package.Win64." + action + ".ps1")
-
-        # The script created generally for this platform
-        package_file = os.path.join(folder_path, "Package.Win64.bat")
-        package_file_posh = os.path.join(folder_path, "Package.Win64.ps1")
-
-        if os.path.exists(package_file_specific_posh):
-            if user_consent(user_consent_message):
-                subprocess.call([package_file_specific_posh], cwd=folder_path)
-        elif os.path.exists(package_file_specific):
-            if user_consent(user_consent_message):
-                subprocess.call([package_file_specific], cwd=folder_path)
-        elif os.path.exists(package_file):
-            pass
-
-    elif current_platform.startswith("Win32"):
-        # The script created specifically for this action
-        package_file_specific = os.path.join(folder_path, "Package.Win32." + action + ".bat")
-        package_file_specific_posh = os.path.join(folder_path, "Package.Win32." + action + ".ps1")
-
-        # The script created generally for this platform
-        package_file = os.path.join(folder_path, "Package.Win32.bat")
-        package_file_posh = os.path.join(folder_path, "Package.Win32.ps1")
-
-        if os.path.exists(package_file_specific_posh):
-            if user_consent(user_consent_message):
-                subprocess.call([package_file_specific_posh], cwd=folder_path)
-        elif os.path.exists(package_file_specific):
-            if user_consent(user_consent_message):
-                subprocess.call([package_file_specific], cwd=folder_path)
-        elif os.path.exists(package_file):
-            pass
-
-    elif current_platform.startswith("Win"):
-        # The script created specifically for this action
+        package_file_specific_64 = os.path.join(folder_path, "Package.Win64." + action + ".bat")
+        package_file_specific_64_posh = os.path.join(folder_path, "Package.Win64." + action + ".ps1")
         package_file_specific = os.path.join(folder_path, "Package.Win." + action + ".bat")
         package_file_specific_posh = os.path.join(folder_path, "Package.Win." + action + ".ps1")
 
-        # The script created generally for this platform
-        package_file = os.path.join(folder_path, "Package.Win.bat")
-        package_file_posh = os.path.join(folder_path, "Package.Win.ps1")
+        if os.path.exists(package_file_specific_64_posh):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific_64_posh], cwd=folder_path)
 
-        if os.path.exists(package_file_specific_posh):
+        elif os.path.exists(package_file_specific_64):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific_64], cwd=folder_path)
+
+        elif os.path.exists(package_file_specific_posh):
             if user_consent(user_consent_message):
                 subprocess.call([package_file_specific_posh], cwd=folder_path)
+
         elif os.path.exists(package_file_specific):
             if user_consent(user_consent_message):
                 subprocess.call([package_file_specific], cwd=folder_path)
-        elif os.path.exists(package_file):
-            pass
+
+    elif current_platform.startswith("Win32"):
+        # The script created specifically for this action
+        package_file_specific_32 = os.path.join(folder_path, "Package.Win32." + action + ".bat")
+        package_file_specific_32_posh = os.path.join(folder_path, "Package.Win32." + action + ".ps1")
+        package_file_specific = os.path.join(folder_path, "Package.Win." + action + ".bat")
+        package_file_specific_posh = os.path.join(folder_path, "Package.Win." + action + ".ps1")
+
+        if os.path.exists(package_file_specific_32_posh):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific_32_posh], cwd=folder_path)
+
+        elif os.path.exists(package_file_specific_32):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific_32], cwd=folder_path)
+
+        elif os.path.exists(package_file_specific_posh):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific_posh], cwd=folder_path)
+                
+        elif os.path.exists(package_file_specific):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific], cwd=folder_path)
 
     elif current_platform.startswith("Linux"):
         # The script created specifically for this action
         package_file_specific = os.path.join(folder_path, "Package.Linux." + action + ".sh")
 
-        # The script created generally for this platform
-        package_file = os.path.join(folder_path, "Package.Linux.bat")
-
         if os.path.exists(package_file_specific):
             if user_consent(user_consent_message):
                 subprocess.call(["bash", package_file_specific], cwd=folder_path)
-        elif os.path.exists(package_file):
-            pass
 
     elif current_platform.startswith("macOS"):
         # The script created specifically for this action
         package_file_specific = os.path.join(folder_path, "Package.macOS." + action + ".sh")
 
-        # The script created generally for this platform
-        package_file = os.path.join(folder_path, "Package.macOS.sh")
-
         if os.path.exists(package_file_specific):
             if user_consent(user_consent_message):
                 subprocess.call(["bash", package_file_specific], cwd=folder_path)
-        elif os.path.exists(package_file):
-            pass
 
 def compile_file(file_path):
     """
@@ -439,7 +459,7 @@ def compile_file(file_path):
 
         # Get the output file name
         output_file = os.path.join(os.getcwd(),
-                                   other_data["Application Information"]["Name"] + ".star")
+                                   other_data["Package Information"]["Name"] + ".star")
 
         # Create Package.yml
         package_yaml_file = os.path.join(temp_dir, PACKAGE_INFO_FILE)

@@ -8,3 +8,5 @@ taskkill /IM dotstar.exe /F
 
 echo Removing files...
 rmdir %LOCALAPPDATA%\DotStar\ /S /Q
+
+rem TODO: Remove DotStar from PATH

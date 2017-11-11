@@ -329,7 +329,43 @@ def select_additional_tasks(folder_path, action):
     user_consent_message = ("Additional supportive scripts for action '" + action +
                             "' were found. Run? (Y/n):")
 
-    if current_platform.startswith("Win"):
+    if current_platform.startswith("Win64"):
+        # The script created specifically for this action
+        package_file_specific = os.path.join(folder_path, "Package.Win64." + action + ".bat")
+        package_file_specific_posh = os.path.join(folder_path, "Package.Win64." + action + ".ps1")
+
+        # The script created generally for this platform
+        package_file = os.path.join(folder_path, "Package.Win64.bat")
+        package_file_posh = os.path.join(folder_path, "Package.Win64.ps1")
+
+        if os.path.exists(package_file_specific_posh):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific_posh], cwd=folder_path)
+        elif os.path.exists(package_file_specific):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific], cwd=folder_path)
+        elif os.path.exists(package_file):
+            pass
+
+    elif current_platform.startswith("Win32"):
+        # The script created specifically for this action
+        package_file_specific = os.path.join(folder_path, "Package.Win32." + action + ".bat")
+        package_file_specific_posh = os.path.join(folder_path, "Package.Win32." + action + ".ps1")
+
+        # The script created generally for this platform
+        package_file = os.path.join(folder_path, "Package.Win32.bat")
+        package_file_posh = os.path.join(folder_path, "Package.Win32.ps1")
+
+        if os.path.exists(package_file_specific_posh):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific_posh], cwd=folder_path)
+        elif os.path.exists(package_file_specific):
+            if user_consent(user_consent_message):
+                subprocess.call([package_file_specific], cwd=folder_path)
+        elif os.path.exists(package_file):
+            pass
+
+    elif current_platform.startswith("Win"):
         # The script created specifically for this action
         package_file_specific = os.path.join(folder_path, "Package.Win." + action + ".bat")
         package_file_specific_posh = os.path.join(folder_path, "Package.Win." + action + ".ps1")

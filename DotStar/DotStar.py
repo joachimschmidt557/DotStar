@@ -364,7 +364,7 @@ def select_additional_tasks(folder_path, action):
 
         if os.path.exists(package_file_specific_64_posh):
             if user_consent(user_consent_message):
-                subprocess.call([package_file_specific_64_posh], cwd=folder_path)
+                subprocess.call(["powershell.exe", package_file_specific_64_posh], cwd=folder_path)
 
         elif os.path.exists(package_file_specific_64):
             if user_consent(user_consent_message):
@@ -372,7 +372,7 @@ def select_additional_tasks(folder_path, action):
 
         elif os.path.exists(package_file_specific_posh):
             if user_consent(user_consent_message):
-                subprocess.call([package_file_specific_posh], cwd=folder_path)
+                subprocess.call(["powershell.exe", package_file_specific_posh], cwd=folder_path)
 
         elif os.path.exists(package_file_specific):
             if user_consent(user_consent_message):
@@ -387,7 +387,7 @@ def select_additional_tasks(folder_path, action):
 
         if os.path.exists(package_file_specific_32_posh):
             if user_consent(user_consent_message):
-                subprocess.call([package_file_specific_32_posh], cwd=folder_path)
+                subprocess.call(["powershell.exe", package_file_specific_32_posh], cwd=folder_path)
 
         elif os.path.exists(package_file_specific_32):
             if user_consent(user_consent_message):
@@ -395,7 +395,7 @@ def select_additional_tasks(folder_path, action):
 
         elif os.path.exists(package_file_specific_posh):
             if user_consent(user_consent_message):
-                subprocess.call([package_file_specific_posh], cwd=folder_path)
+                subprocess.call(["powershell.exe", package_file_specific_posh], cwd=folder_path)
                 
         elif os.path.exists(package_file_specific):
             if user_consent(user_consent_message):

@@ -313,7 +313,7 @@ def open_local_file_or_folder(file_or_dir_path, action='0'):
                     shutil.copytree(temp_dir, installation_dir)
 
                     # Additional installation steps
-                    select_additional_tasks(temp_dir, "Install")
+                    select_additional_tasks(installation_dir, "Install")
 
                     logging.info("Installation successful")
                 elif action == "Uninstall":

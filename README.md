@@ -56,5 +56,4 @@ If you already have DotStar installed, upgrade it by using this command:
 
 `dotstar -i dotstar`
 
-If you don't have DotStar installed, download the installers from the GitHub
-release page. Python is not required to operate DotStar.
+If you don't have DotStar installed, follow the instructions above.

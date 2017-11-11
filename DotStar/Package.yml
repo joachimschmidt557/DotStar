@@ -1,10 +1,6 @@
-Basic Package Information:
-  ID: dotstar
 Compilation Information:
     Ignore files:
         - .git*
-        - installer.cfg
-        - installer.nsi
         - build*
         - __pycache__*
 Author information:
@@ -17,7 +13,20 @@ Application Information:
   Friendly Name: DotStar
   Description: Open file container format for universal, cross-platform applications
     and other files
-  Version: 0.1.1
+  Version: 0.1.2
+  Version System: SemVer
+  Supported Platforms:
+    - Win32
+    - Win64
+    #- macOS
+    - Linux
+
+Package Information:
+  Name: dotstar
+  Friendly Name: DotStar
+  Description: Open file container format for universal, cross-platform applications
+    and other files
+  Version: 0.1.2
   Version System: SemVer
   Supported Platforms:
     - Win32

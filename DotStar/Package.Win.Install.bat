@@ -10,3 +10,5 @@ echo Copying files...
 rmdir %LOCALAPPDATA%\DotStar\ /S /Q
 mkdir %LOCALAPPDATA%\DotStar
 copy .\dist\dotstar.exe %LOCALAPPDATA%\DotStar\ /Y
+copy .\GenerateShim.bat %LOCALAPPDATA%\DotStar\ /Y
+.\GenerateShim.bat %LOCALAPPDATA%\DotStar\dotstar.exe

@@ -17,3 +17,7 @@ rem Generate shims
 .\GenerateShim.bat %LOCALAPPDATA%\DotStar\GenerateShim.bat
 
 rem TODO: Add Shim folder to PATH
+
+rem Create other environment variables
+setx DOTSTARPATH %LOCALAPPDATA%\DotStar\
+setx DOTSTARSHIMS %LOCALAPPDATA%\DotStar\Shims\

@@ -177,7 +177,7 @@ def open_file(input_name, action='0'):
     # Retrieve the file
     local_file_path = ""
     if os.path.isfile(input_name):
-        local_file_path = input_name
+        local_file_path = os.path.realpath(input_name)
     elif is_url(input_name):
         local_file_path = download_file(input_name, get_temporary_directory())
     elif not input_name.endswith(".star"):
@@ -783,9 +783,7 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.CRITICAL)
 
     # Yes to all ?
-    if settings["Security"]["Always allow running scripts"] or result.yestoall:
-        yes_to_all = True
-    else: yes_to_all = False
+    yes_to_all = bool(settings["Security"]["Always allow running scripts"] or result.yestoall)
 
     # Go though input files
     for input_file in result.files:
